@@ -162,7 +162,10 @@ const netObj = {
 	netTransmit: 0
 }
 
-const fileContentObj = asyncProcFilesRead();
+const interval = setInterval(async () => {
+    const fileContentObj = await asyncProcFilesRead();
 
-uptimeObj.init(fileContentObj.uptime);
-console.log(uptimeObj.uptime)
+    uptimeObj.init(fileContentObj.uptime);
+    console.log(uptimeObj.uptime)
+});
+
