@@ -1,7 +1,8 @@
-
+'use strict';
 
 const fs = require('fs/promises')
 const path = require('path')
+const { Buffer } = require('buffer')
 require('dotenv').config(); // dotenv 사용
 
 const HZ = process.env.CONFIG_HZ;
@@ -79,7 +80,8 @@ const loadavgObj = {
 const utmpObj = {
     init(content) {
         try {
-            const binary = new Buffer(content).toString(base64);
+            console.log(content)
+            //const binary = new Buffer(content).toString(base64);
             console.log(binary)
 
             this.isInit = true;
