@@ -57,7 +57,7 @@ const loadavgObj = {
         try {
             const reg = /[0-9]*[.]?[0-9]+/g;
             const parseResult = content.match(reg); // [0]: loadavg1m, [1]: loadavg5m time [2]: loadavg15m
-            console.log(parseResult)
+
             this.loadavg1m = parseResult[0];
             this.loadavg5m = parseResult[1];
             this.loadavg15m = parseResult[2];
@@ -78,17 +78,16 @@ const loadavgObj = {
 /*cpu 관리 객체 */
 const cpuObj = {
     init(content) {
-        const regCpu = /cpu(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)\n/g;
-        const regCpu0 = /cpu0\s*d+\n/g;
-        const regCpu1 = /cpu1\s*d+\n/g;
-        const regCpu2 = /cpu2\s*d+\n/g;
-        const regCpu3 = /cpu3\s*d+\n/g;
+        const lines = content.split('\n');
+        console.log(lines)
 
-        const parseCpu = content.match(regCpu); // 
-        const parseCpu0 = content.match(regCpu0); // 
-        const parseCpu1 = content.match(regCpu1); // 
-        const parseCpu2 = content.match(regCpu2); // 
-        const parseCpu3 = content.match(regCpu3); // 
+        const regInt = /d+/g;
+
+        const parseCpu = content.match(regInt); // 
+        const parseCpu0 = content.match(regInt); // 
+        const parseCpu1 = content.match(regInt); // 
+        const parseCpu2 = content.match(regInt); // 
+        const parseCpu3 = content.match(regInt); // 
 
         console.log(parseCpu,parseCpu0,parseCpu1,parseCpu2,parseCpu3);
     },
