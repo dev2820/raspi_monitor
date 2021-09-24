@@ -11,7 +11,6 @@ const asyncProcFilesRead = async () => {
     const filePathList = [
         "/proc/uptime",      // uptime 정보
         "/proc/loadavg",     // loadavg 1분 5분 15분 정보
-        "/var/run/utmp",     // 현재 접속중인 유저 저장
         "/proc/stat",        // cpu 사용률 정보
         "/proc/meminfo",     // 메모리 정보
         "/proc/diskstats",   // 디스크 정보
@@ -76,29 +75,22 @@ const loadavgObj = {
     loadavg15m: 0,
 }
 
-/*utmp 관리 객체 */
-const utmpObj = {
-    init(content) {
-        try {
-            console.log(content)
-            //const binary = new Buffer(content).toString(base64);
-            console.log(binary)
-
-            this.isInit = true;
-        }
-        catch(err) {
-            console.log(err)
-            this.isInit = false;
-        }
-    },
-    isInit: false,
-    numOfUsers: 0
-}
-
 /*cpu 관리 객체 */
 const cpuObj = {
     init(content) {
-        
+        const regCpu = /cpu\s*\d+/g;
+        const regCpu0 = /cpu0\s*d+/g;
+        const regCpu1 = /cpu1\s*d+/g;
+        const regCpu2 = /cpu2\s*d+/g;
+        const regCpu3 = /cpu3\s*d+/g;
+
+        const parseCpu = content.match(reg); // 
+        const parseCpu0 = content.match(reg); // 
+        const parseCpu1 = content.match(reg); // 
+        const parseCpu2 = content.match(reg); // 
+        const parseCpu3 = content.match(reg); // 
+
+        console.log(parseCpu,parseCpu0,parseCpu1,parseCpu2,parseCpu3);
     },
     isInit: false,
     cpuUsage: 0,

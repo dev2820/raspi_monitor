@@ -1,1 +1,15 @@
 # raspi_monitor
+
+CREATE TABLE summary_status (
+	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
+	uptime FLOAT UNSIGNED NULL,
+	loadavg_1m FLOAT UNSIGNED NULL,
+	loadavg_5m FLOAT UNSIGNED NULL,
+	loadavg_15m FLOAT UNSIGNED NULL,
+	cpu_usage FLOAT UNSIGNED NULL,
+	mem_usage FLOAT UNSIGNED NULL,
+	disk_total_read FLOAT UNSIGNED NULL,
+	disk_total_write FLOAT UNSIGNED NULL,
+	net_receive FLOAT UNSIGNED NULL,
+	net_transmit FLOAT UNSIGNED NULL,
+);
