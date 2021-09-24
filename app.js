@@ -183,7 +183,6 @@ const interval = setInterval(async () => {
 
     uptimeObj.init(fileContentObj.uptime);
     loadavgObj.init(fileContentObj.loadavg);
-    utmpObj.init(fileContentObj.utmp);
     cpuObj.init(fileContentObj.cpu);
     memObj.init(fileContentObj.mem);
     diskObj.init(fileContentObj.disk);
