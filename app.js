@@ -54,7 +54,19 @@ const uptimeObj = {
 /*loadavg 관리 객체 */
 const loadavgObj = {
     init(content) {
-        
+        try {
+            const reg = /[0-9]*[.]?[0-9]+/g;
+            const parseResult = reg.exec(content); // [0]: loadavg1m, [1]: loadavg5m time [2]: loadavg15m
+            this.loadavg1m = parseResult[0];
+            this.loadavg5m = parseResult[1];
+            this.loadavg15m = parseResult[2];
+
+            this.isInit = true;
+        }
+        catch(err) {
+            console.log(err)
+            this.isInit = false;
+        }
     },
     isInit: false,
     loadavg1m: 0,
@@ -146,8 +158,8 @@ const diskObj = {
     isInit: false,
     diskTotalRead:0,
 	diskTotalWrite:0,
-	mmmcblkRead:0,
-	mmmcblkWrite:0,
+	mmcblkRead:0,
+	mmcblkWrite:0,
 	sdaRead:0,
 	sdaWrite:0
 }
@@ -166,6 +178,8 @@ const interval = setInterval(async () => {
     const fileContentObj = await asyncProcFilesRead();
 
     uptimeObj.init(fileContentObj.uptime);
+    loadavgObj.init(fileContentObj.loadavg);
     console.log(uptimeObj.uptime)
-});
+    console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m)
+},3000);
 
