@@ -2,8 +2,9 @@
 
 const fs = require('fs/promises')
 const path = require('path')
+require('dotenv').config(); // dotent 사용
 
-const intervalSecond = process.env.INTERVAL*1000;
+const HZ = process.env.CONFIG_HZ;
 
 const filePathList = [
     "/proc/uptime",      // uptime 정보
@@ -23,4 +24,5 @@ Promise.all(filePromiseList).then(contents=>{
     console.log(contents);
 })
 
+console.log(HZ);
 
