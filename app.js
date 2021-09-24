@@ -57,6 +57,7 @@ const loadavgObj = {
         try {
             const reg = /[0-9]*[.]?[0-9]+/g;
             const parseResult = reg.exec(content); // [0]: loadavg1m, [1]: loadavg5m time [2]: loadavg15m
+            console.log(parseResult)
             this.loadavg1m = parseResult[0];
             this.loadavg5m = parseResult[1];
             this.loadavg15m = parseResult[2];
