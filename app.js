@@ -38,7 +38,7 @@ const uptimeObj = {
     init(content) {
         try {
             const reg = /[0-9]*[.]?[0-9]+/g
-            const parseResult = content.match(content); // [0]:uptime, [1]:idle time
+            const parseResult = content.match(reg); // [0]:uptime, [1]:idle time
             this.uptime = parseResult[0];
             this.isInit = true;
         }
@@ -56,7 +56,7 @@ const loadavgObj = {
     init(content) {
         try {
             const reg = /[0-9]*[.]?[0-9]+/g;
-            const parseResult = content.match(content); // [0]: loadavg1m, [1]: loadavg5m time [2]: loadavg15m
+            const parseResult = content.match(reg); // [0]: loadavg1m, [1]: loadavg5m time [2]: loadavg15m
             console.log(parseResult)
             this.loadavg1m = parseResult[0];
             this.loadavg5m = parseResult[1];
