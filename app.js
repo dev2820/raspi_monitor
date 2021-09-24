@@ -84,11 +84,11 @@ const cpuObj = {
         const regCpu2 = /cpu2\s*d+/g;
         const regCpu3 = /cpu3\s*d+/g;
 
-        const parseCpu = content.match(reg); // 
-        const parseCpu0 = content.match(reg); // 
-        const parseCpu1 = content.match(reg); // 
-        const parseCpu2 = content.match(reg); // 
-        const parseCpu3 = content.match(reg); // 
+        const parseCpu = content.match(regCpu); // 
+        const parseCpu0 = content.match(regCpu0); // 
+        const parseCpu1 = content.match(regCpu1); // 
+        const parseCpu2 = content.match(regCpu2); // 
+        const parseCpu3 = content.match(regCpu3); // 
 
         console.log(parseCpu,parseCpu0,parseCpu1,parseCpu2,parseCpu3);
     },
