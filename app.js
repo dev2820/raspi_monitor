@@ -80,7 +80,7 @@ const cpuObj = {
         const lines = content.split('\n');
         console.log(lines)
 
-        const regInt = /d+/g;
+        const regInt = /[0-9]+/g;
 
         const parseCpu = lines[0].match(regInt); // 
         const parseCpu0 = lines[1].match(regInt); // 
