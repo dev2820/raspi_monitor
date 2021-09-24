@@ -78,11 +78,11 @@ const loadavgObj = {
 /*cpu 관리 객체 */
 const cpuObj = {
     init(content) {
-        const regCpu = /cpu\s*\d+/g;
-        const regCpu0 = /cpu0\s*d+/g;
-        const regCpu1 = /cpu1\s*d+/g;
-        const regCpu2 = /cpu2\s*d+/g;
-        const regCpu3 = /cpu3\s*d+/g;
+        const regCpu = /cpu(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)(\s*\d+)\n/g;
+        const regCpu0 = /cpu0\s*d+\n/g;
+        const regCpu1 = /cpu1\s*d+\n/g;
+        const regCpu2 = /cpu2\s*d+\n/g;
+        const regCpu3 = /cpu3\s*d+\n/g;
 
         const parseCpu = content.match(regCpu); // 
         const parseCpu0 = content.match(regCpu0); // 
