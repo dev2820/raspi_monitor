@@ -25,11 +25,10 @@ const asyncProcFilesRead = async () => {
     return {
         uptime: fileContentList[0],
         loadavg: fileContentList[1],
-        utmp: fileContentList[2],
-        cpu: fileContentList[3],
-        mem: fileContentList[4],
-        disk: fileContentList[5],
-        net: fileContentList[6],
+        cpu: fileContentList[2],
+        mem: fileContentList[3],
+        disk: fileContentList[4],
+        net: fileContentList[5],
     }
 }
 
