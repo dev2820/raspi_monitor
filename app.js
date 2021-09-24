@@ -43,6 +43,7 @@ const uptimeObj = {
             this.isInit = true;
         }
         catch(err) {
+            console.log(err)
             this.isInit = false;
         }
     },
