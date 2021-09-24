@@ -78,7 +78,16 @@ const loadavgObj = {
 /*utmp 관리 객체 */
 const utmpObj = {
     init(content) {
-        
+        try {
+            const binary = new Buffer(content).toString(base64);
+            console.log(binary)
+
+            this.isInit = true;
+        }
+        catch(err) {
+            console.log(err)
+            this.isInit = false;
+        }
     },
     isInit: false,
     numOfUsers: 0
@@ -180,6 +189,12 @@ const interval = setInterval(async () => {
 
     uptimeObj.init(fileContentObj.uptime);
     loadavgObj.init(fileContentObj.loadavg);
+    utmpObj.init(fileContentObj.utmp);
+    cpuObj.init(fileContentObj.cpu);
+    memObj.init(fileContentObj.mem);
+    diskObj.init(fileContentObj.disk);
+    netObj.init(fileContentObj.net);
+
     console.log(uptimeObj.uptime)
     console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m)
 },3000);
