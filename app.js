@@ -387,7 +387,7 @@ const diskObj = {
 const netObj = {
     init(content) {
         const lines = content.split('\n');
-        const values = lines.map(line=>line.replace(/\s+/g, ' ').split(' '));
+        const values = lines.map(line=>line.replace(/\s+/g, ' ').trim().split(' '));
 
         // values.forEach(stats => {
         //     netName = stats[0]
