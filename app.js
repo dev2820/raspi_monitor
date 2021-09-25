@@ -387,7 +387,12 @@ const diskObj = {
 const netObj = {
     init(content) {
         const lines = content.split('\n');
-        console.log(lines);
+        const values = lines.map(line=>line.replace(/\s+/g, ' ').split(' '));
+
+        // values.forEach(stats => {
+        //     netName = stats[0]
+        // })
+        console.log(values)
     },
     isInit: false,
     netReceive: 0,
