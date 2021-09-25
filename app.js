@@ -89,11 +89,11 @@ const cpuObj = {
             const parseCpu2 = lines[3].match(regInt);
             const parseCpu3 = lines[4].match(regInt);
 
-            let beforeTotal = beforeCpuUs+ beforeCpuSy+ beforeCpuNi+ beforeCpuId+ beforeCpuWa+ beforeCpuHi+ beforeCpuSi+ beforeCpuSt;
-            let beforeTotal0 = beforeCpu0us+ beforeCpu0sy+ beforeCpu0ni+ beforeCpu0id+ beforeCpu0wa+ beforeCpu0hi+ beforeCpu0si+ beforeCpu0st;
-            let beforeTotal1 = beforeCpu1us+ beforeCpu1sy+ beforeCpu1ni+ beforeCpu1id+ beforeCpu1wa+ beforeCpu1hi+ beforeCpu1si+ beforeCpu1st;
-            let beforeTotal2 = beforeCpu2us+ beforeCpu2sy+ beforeCpu2ni+ beforeCpu2id+ beforeCpu2wa+ beforeCpu2hi+ beforeCpu2si+ beforeCpu2st;
-            let beforeTotal3 = beforeCpu3us+ beforeCpu3sy+ beforeCpu3ni+ beforeCpu3id+ beforeCpu3wa+ beforeCpu3hi+ beforeCpu3si+ beforeCpu3st;
+            let beforeTotal = this.beforeCpuUs+ this.beforeCpuSy+ this.beforeCpuNi+ this.beforeCpuId+ this.beforeCpuWa+ this.beforeCpuHi+ this.beforeCpuSi+ this.beforeCpuSt;
+            let beforeTotal0 = this.beforeCpu0us+ this.beforeCpu0sy+ this.beforeCpu0ni+ this.beforeCpu0id+ this.beforeCpu0wa+ this.beforeCpu0hi+ this.beforeCpu0si+ this.beforeCpu0st;
+            let beforeTotal1 = this.beforeCpu1us+ this.beforeCpu1sy+ this.beforeCpu1ni+ this.beforeCpu1id+ this.beforeCpu1wa+ this.beforeCpu1hi+ this.beforeCpu1si+ this.beforeCpu1st;
+            let beforeTotal2 = this.beforeCpu2us+ this.beforeCpu2sy+ this.beforeCpu2ni+ this.beforeCpu2id+ this.beforeCpu2wa+ this.beforeCpu2hi+ this.beforeCpu2si+ this.beforeCpu2st;
+            let beforeTotal3 = this.beforeCpu3us+ this.beforeCpu3sy+ this.beforeCpu3ni+ this.beforeCpu3id+ this.beforeCpu3wa+ this.beforeCpu3hi+ this.beforeCpu3si+ this.beforeCpu3st;
 
             let total = parseInt(parseCpu[0]) + parseInt(parseCpu[1]) + parseInt(parseCpu[2]) + parseInt(parseCpu[3]) + parseInt(parseCpu[4]) + parseInt(parseCpu[5]) + parseInt(parseCpu[6]) + parseInt(parseCpu[7]);
             let total0 = parseInt(parseCpu0[0]) + parseInt(parseCpu0[1]) + parseInt(parseCpu0[2]) + parseInt(parseCpu0[3]) + parseInt(parseCpu0[4]) + parseInt(parseCpu0[5]) + parseInt(parseCpu0[6]) + parseInt(parseCpu0[7]);
