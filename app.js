@@ -292,7 +292,7 @@ const diskObj = {
         try {
             const lines = content.split('\n');
             const values = lines.map(line=>line.replace(/\s+/g, ' ').split('\s'))
-            console.log(lines)
+            console.log(values)
             this.isInit = true;
         }
         catch(err) {
