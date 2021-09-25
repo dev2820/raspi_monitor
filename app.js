@@ -79,8 +79,6 @@ const cpuObj = {
     init(content) {
         try {
             const lines = content.split('\n');
-            console.log(lines)
-
             const regInt = /[0-9]+/g;
 
             const parseCpu = lines[0].match(regInt);
@@ -253,7 +251,27 @@ const cpuObj = {
 /*mem 관리 객체 */
 const memObj = {
     init(content) {
-        
+        try {
+            const lines = content.split('\n');
+            const regInt = /[0-9]+/g;
+
+            this.totalMemory = parseInt(lines[0].match(regInt)[0]);
+            this.freeMemory = parseInt(lines[1].match(regInt)[0]);
+            this.usedMemory = this.totalMemory - this.freeMemory;
+            this.buffMemory = parseInt(lines[3].match(regInt)[0]);
+            this.cacheMemory = parseInt(lines[4].match(regInt)[0]);
+            this.availableMemory = parseInt(lines[2].match(regInt)[0]);
+            this.totalSwap = parseInt(lines[14].match(regInt)[0]);
+            this.freeSwap = parseInt(lines[15].match(regInt)[0]);
+            this.usedSwap = this.totalSwap - this.freeSwap;
+            this.memUsage = this.usedMemory/this.totalMemory;
+
+            this.isInit=true;
+        }
+        catch(err) {
+            console.log(err)
+            this.isInit=false;
+        }
     },
     isInit: false,
     memUsage:0,
@@ -271,7 +289,16 @@ const memObj = {
 /*disk 관리 객체 */
 const diskObj = {
     init(content) {
-        
+        try {
+            lines = content.split('\n');
+            lines.map(line=>line.replace(/\s+/g, ' ').split('\s'))
+            console.log(lines)
+            this.isInit = true;
+        }
+        catch(err) {
+            console.log(err);
+            this.isInit = false;
+        }
     },
     isInit: false,
     diskTotalRead:0,
@@ -303,6 +330,7 @@ const interval = setInterval(async () => {
     netObj.init(fileContentObj.net);
 
     console.log(uptimeObj.uptime)
-    console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m)
+    console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m);
+    console.log(cpuObj.cpuUsage);
 },3000);
 
