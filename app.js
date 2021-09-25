@@ -386,20 +386,39 @@ const diskObj = {
 /*net 관리 객체 */
 const netObj = {
     init(content) {
-        const lines = content.split('\n');
-        const values = lines.map(line=>line.replace(/\s+/g, ' ').trim().split(' '));
+        try {
+            const lines = content.split('\n');
+            const values = lines.map(line=>line.replace(/\s+/g, ' ').trim().split(' '));
 
-        // values.forEach(stats => {
-        //     netName = stats[0]
-        // })
-        console.log(values)
+            values.forEach(stats => {
+                const netName = stats[0];
+                switch(netName) {
+                    case 'eht0': {
+                        const receiveBytes = parseInt(stats[1]);
+                        const transmitBytes = parseInt(stats[9]);
+                        
+                        this.netReceive = (receiveBytes-this.beforeNetReceive)*8/INTERVAL/1024;
+                        this.netTransmit = (transmitBytes-this.beforeNetTransmit)*8/INTERVAL/1024;
+                        break;
+                    }
+                }
+            })
+
+            this.isInit = true;
+        }
+        catch(err) {
+            console.log(err)
+            this.isInit = false;
+        }
     },
     isInit: false,
+    beforeNetReceive: 0,
+    beforeNetTransmit: 0,
     netReceive: 0,
 	netTransmit: 0
 }
 
-const interval = setInterval(async () => {
+setInterval(async () => {
     const fileContentObj = await asyncProcFilesRead();
 
     uptimeObj.init(fileContentObj.uptime);
@@ -409,10 +428,12 @@ const interval = setInterval(async () => {
     diskObj.init(fileContentObj.disk);
     netObj.init(fileContentObj.net);
 
-    console.log(uptimeObj.uptime)
+    console.log(uptimeObj.uptime);
     console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m);
     console.log(cpuObj.cpuUsage);
-    console.log(diskObj.diskTotalRead,diskObj.diskTotalWrite,diskObj.mmcblkRead,diskObj.mmcblkWrite,diskObj.sdaRead,diskObj.sdaWrite)
+    console.log(memObj.memUsage);
+    console.log(diskObj.diskTotalRead,diskObj.diskTotalWrite,diskObj.mmcblkRead,diskObj.mmcblkWrite,diskObj.sdaRead,diskObj.sdaWrite);
+    console.log(netObj.netReceive, netObj.netTransmit);
 
 },INTERVAL*1000);
 
