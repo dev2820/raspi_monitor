@@ -386,7 +386,8 @@ const diskObj = {
 /*net 관리 객체 */
 const netObj = {
     init(content) {
-        
+        const lines = content.split('\n');
+        console.log(lines);
     },
     isInit: false,
     netReceive: 0,
@@ -407,6 +408,6 @@ const interval = setInterval(async () => {
     console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m);
     console.log(cpuObj.cpuUsage);
     console.log(diskObj.diskTotalRead,diskObj.diskTotalWrite,diskObj.mmcblkRead,diskObj.mmcblkWrite,diskObj.sdaRead,diskObj.sdaWrite)
-    
+
 },INTERVAL*1000);
 
