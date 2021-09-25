@@ -153,6 +153,46 @@ const cpuObj = {
             this.cpu2Usage = 100 - this.cpu2id;
             this.cpu3Usage = 100 - this.cpu3id;
             
+            this.beforeCpuUs = parseInt(parseCpu[0]); 
+            this.beforeCpuSy = parseInt(parseCpu[1]); 
+            this.beforeCpuNi = parseInt(parseCpu[2]); 
+            this.beforeCpuId = parseInt(parseCpu[3]); 
+            this.beforeCpuWa = parseInt(parseCpu[4]); 
+            this.beforeCpuHi = parseInt(parseCpu[5]); 
+            this.beforeCpuSi = parseInt(parseCpu[6]); 
+            this.beforeCpuSt = parseInt(parseCpu[7]); 
+            this.beforeCpu0us = parseInt(parseCpu0[0]); 
+            this.beforeCpu0sy = parseInt(parseCpu0[1]); 
+            this.beforeCpu0ni = parseInt(parseCpu0[2]); 
+            this.beforeCpu0id = parseInt(parseCpu0[3]); 
+            this.beforeCpu0wa = parseInt(parseCpu0[4]); 
+            this.beforeCpu0hi = parseInt(parseCpu0[5]); 
+            this.beforeCpu0si = parseInt(parseCpu0[6]); 
+            this.beforeCpu0st = parseInt(parseCpu0[7]); 
+            this.beforeCpu1us = parseInt(parseCpu1[0]); 
+            this.beforeCpu1sy = parseInt(parseCpu1[1]); 
+            this.beforeCpu1ni = parseInt(parseCpu1[2]); 
+            this.beforeCpu1id = parseInt(parseCpu1[3]); 
+            this.beforeCpu1wa = parseInt(parseCpu1[4]); 
+            this.beforeCpu1hi = parseInt(parseCpu1[5]); 
+            this.beforeCpu1si = parseInt(parseCpu1[6]); 
+            this.beforeCpu1st = parseInt(parseCpu1[7]); 
+            this.beforeCpu2us = parseInt(parseCpu2[0]); 
+            this.beforeCpu2sy = parseInt(parseCpu2[1]); 
+            this.beforeCpu2ni = parseInt(parseCpu2[2]); 
+            this.beforeCpu2id = parseInt(parseCpu2[3]); 
+            this.beforeCpu2wa = parseInt(parseCpu2[4]); 
+            this.beforeCpu2hi = parseInt(parseCpu2[5]); 
+            this.beforeCpu2si = parseInt(parseCpu2[6]); 
+            this.beforeCpu2st = parseInt(parseCpu2[7]); 
+            this.beforeCpu3us = parseInt(parseCpu3[0]); 
+            this.beforeCpu3sy = parseInt(parseCpu3[1]); 
+            this.beforeCpu3ni = parseInt(parseCpu3[2]); 
+            this.beforeCpu3id = parseInt(parseCpu3[3]); 
+            this.beforeCpu3wa = parseInt(parseCpu3[4]); 
+            this.beforeCpu3hi = parseInt(parseCpu3[5]); 
+            this.beforeCpu3si = parseInt(parseCpu3[6]); 
+            this.beforeCpu3st = parseInt(parseCpu3[7]); 
             this.isInit=true;
         }
         catch(err) {
@@ -295,28 +335,33 @@ const diskObj = {
             //values[index]: [3]:장치이름, 
 
             values.forEach(stats=> {
-                console.log(stats)
-                const deviceName = stats[2];
+                const deviceName = stats[3];
                 switch(deviceName) {
                     case 'mmcblk0': {
-                        const mmcblkReadSectors = parseInt(stats[5]); // 읽은 섹터 수
+                        const mmcblkReadSectors = parseInt(stats[6]); // 읽은 섹터 수
                         this.mmcblkRead = ((mmcblkReadSectors - this.beforeMmcblkReadSectors) / 2)/INTERVAL;
+                        this.beforeMmcblkReadSectors = mmcblkReadSectors;
 
-                        const mmcblkWriteSectors = parseInt(stats[9]); // 읽은 섹터 수
+                        const mmcblkWriteSectors = parseInt(stats[10]); // 쓴 섹터 수
                         this.mmcblkWrite = ((mmcblkWriteSectors - this.beforeMmcblkWriteSectors) / 2)/INTERVAL;
+                        this.beforeMmcblkWriteSectors = mmcblkWriteSectors;
                         break;
                     }
                     case 'sda': {
-                        const sdaReadSectors = parseInt(stats[5]); // 읽은 섹터 수
+                        const sdaReadSectors = parseInt(stats[6]); // 읽은 섹터 수
                         this.sdaRead = ((sdaReadSectors - this.beforeSdaReadSectors) / 2)/INTERVAL;
+                        this.beforeSdaReadSectors = sdaReadSectors;
 
-                        const sdaWriteSectors = parseInt(stats[9]); // 읽은 섹터 수
+                        const sdaWriteSectors = parseInt(stats[10]); // 쓴 섹터 수
                         this.sdaWrite = ((sdaWriteSectors - this.beforeSdaWriteSectors) / 2)/INTERVAL;
+                        this.beforeSdaWriteSectors = sdaWriteSectors;
                         break;
                     }
                 }
             })
 
+            this.diskTotalRead = this.mmcblkRead + this.sdaRead;
+            this.diskTotalWrite = this.mmcblkWrite + this.sdaWrite;
 
             this.isInit = true;
         }
@@ -361,5 +406,7 @@ const interval = setInterval(async () => {
     console.log(uptimeObj.uptime)
     console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m);
     console.log(cpuObj.cpuUsage);
+    console.log(diskObj.diskTotalRead,diskObj.diskTotalWrite,diskObj.mmcblkRead,diskObj.mmcblkWrite,diskObj.sdaRead,diskObj.sdaWrite)
+    
 },INTERVAL*1000);
 
