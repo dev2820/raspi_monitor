@@ -290,8 +290,8 @@ const memObj = {
 const diskObj = {
     init(content) {
         try {
-            lines = content.split('\n');
-            lines.map(line=>line.replace(/\s+/g, ' ').split('\s'))
+            const lines = content.split('\n');
+            const values = lines.map(line=>line.replace(/\s+/g, ' ').split('\s'))
             console.log(lines)
             this.isInit = true;
         }
