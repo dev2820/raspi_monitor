@@ -6,7 +6,7 @@ const { Buffer } = require('buffer')
 require('dotenv').config(); // dotenv 사용
 
 const HZ = process.env.CONFIG_HZ;
-
+const INTERVAL = process.env.INTERVAL;
 const asyncProcFilesRead = async () => {
     const filePathList = [
         "/proc/uptime",      // uptime 정보
@@ -292,7 +292,32 @@ const diskObj = {
         try {
             const lines = content.split('\n');
             const values = lines.map(line=>line.replace(/\s+/g, ' ').split(' '))
-            console.log(values)
+            //values[index]: [3]:장치이름, 
+
+            values.forEach(stats=> {
+                console.log(stats)
+                const deviceName = stats[2];
+                switch(deviceName) {
+                    case 'mmcblk0': {
+                        const mmcblkReadSectors = parseInt(stats[5]); // 읽은 섹터 수
+                        this.mmcblkRead = ((mmcblkReadSectors - this.beforeMmcblkReadSectors) / 2)/INTERVAL;
+
+                        const mmcblkWriteSectors = parseInt(stats[9]); // 읽은 섹터 수
+                        this.mmcblkWrite = ((mmcblkWriteSectors - this.beforeMmcblkWriteSectors) / 2)/INTERVAL;
+                        break;
+                    }
+                    case 'sda': {
+                        const sdaReadSectors = parseInt(stats[5]); // 읽은 섹터 수
+                        this.sdaRead = ((sdaReadSectors - this.beforeSdaReadSectors) / 2)/INTERVAL;
+
+                        const sdaWriteSectors = parseInt(stats[9]); // 읽은 섹터 수
+                        this.sdaWrite = ((sdaWriteSectors - this.beforeSdaWriteSectors) / 2)/INTERVAL;
+                        break;
+                    }
+                }
+            })
+
+
             this.isInit = true;
         }
         catch(err) {
@@ -301,6 +326,10 @@ const diskObj = {
         }
     },
     isInit: false,
+    beforeMmcblkReadSectors:0,
+    beforeSdaReadSectors:0,
+    beforeMmcblkWriteSectors:0,
+    beforeSdaWriteSectors:0,
     diskTotalRead:0,
 	diskTotalWrite:0,
 	mmcblkRead:0,
@@ -332,5 +361,5 @@ const interval = setInterval(async () => {
     console.log(uptimeObj.uptime)
     console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m);
     console.log(cpuObj.cpuUsage);
-},3000);
+},INTERVAL*1000);
 
