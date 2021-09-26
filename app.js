@@ -481,7 +481,7 @@ setInterval(async () => {
             "transmit":netObj.netTransmit.toFixed(1)
         }
     }
-    fs.writeFile('log.json',debugLine);
+    fs.writeFile('log.json',JSON.stringify(debugLine));
 },INTERVAL*1000);
 
 fs.writeFile('log.json',"exit");
