@@ -334,10 +334,11 @@ const diskObj = {
     init(content) {
         try {
             const lines = content.split('\n');
-            const values = lines.map(line=>line.replace(/\s+/g, ' ').split(' '))
+            const values = lines.map(line=>line.replace(/\s+/g, ' ').trim().split(' '))
             //values[index]: [3]:장치이름, 
 
             values.forEach(stats=> {
+                console.log(stats)
                 const deviceName = stats[3];
                 switch(deviceName) {
                     case 'mmcblk0': {
