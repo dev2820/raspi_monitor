@@ -1,11 +1,11 @@
 'use strict';
 
 const fs = require('fs/promises')
+const { createPool } = require('mysql2/promise');
 const path = require('path')
 const { Buffer } = require('buffer')
 require('dotenv').config(); // dotenv 사용
 
-const HZ = process.env.CONFIG_HZ;
 const INTERVAL = process.env.INTERVAL;
 const asyncProcFilesRead = async () => {
     const filePathList = [
@@ -425,8 +425,10 @@ const netObj = {
 }
 
 setInterval(async () => {
+    //파일 읽어오기
     const fileContentObj = await asyncProcFilesRead();
 
+    //파일 내용 가공
     uptimeObj.init(fileContentObj.uptime);
     loadavgObj.init(fileContentObj.loadavg);
     cpuObj.init(fileContentObj.cpu);
@@ -434,6 +436,7 @@ setInterval(async () => {
     diskObj.init(fileContentObj.disk);
     netObj.init(fileContentObj.net);
 
+    //출력
     console.log(new Date())
     console.log(uptimeObj.uptime);
     console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m);
@@ -443,5 +446,41 @@ setInterval(async () => {
     console.log(diskObj.diskTotalRead,diskObj.diskTotalWrite,diskObj.mmcblkRead,diskObj.mmcblkWrite,diskObj.sdaRead,diskObj.sdaWrite);
     console.log(netObj.netReceive, netObj.netTransmit);
 
+    //디버깅 - 파일에 값 출력
+    const debugLine = {
+        "date":new Date(),
+        "uptime":uptimeObj.uptime,
+        "loadavg": {
+            "1m":loadavgObj.loadavg1m,
+            "5m":loadavgObj.loadavg5m,
+            "15m":loadavgObj.loadavg15m,
+        },
+        "cpu": {
+            cpuUsage:cpuObj.cpuUsage.toFixed(1),
+            us:cpuObj.cpuUs.toFixed(1),
+            sy:cpuObj.cpuSy.toFixed(1),
+            ni:cpuObj.cpuNi.toFixed(1),
+            id:cpuObj.cpuId.toFixed(1),
+            wa:cpuObj.cpuWa.toFixed(1),
+            hi:cpuObj.cpuHi.toFixed(1),
+        },
+        "mem": {
+            "memUsage":memObj.memUsage.toFixed(1),
+            "memTotal":memObj.totalMemory.toFixed(1),
+            "memUsed":memObj.usedMemory.toFixed(1),
+            "memBuff":memObj.buffMemory.toFixed(1),
+            "memCache":memObj.cacheMemory.toFixed(1),
+            "memFree":memObj.freeMemory.toFixed(1)
+        },
+        "disk": {
+            "totalRead":diskObj.diskTotalRead.toFixed(1),
+            "totalWrite":diskObj.diskTotalWrite.toFixed(1)
+        },
+        "net": {
+            "receive":netObj.netReceive.toFixed(1),
+            "transmit":netObj.netTransmit.toFixed(1)
+        }
+    }
+    fs.writeFile('log.json',debugLine);
 },INTERVAL*1000);
 
