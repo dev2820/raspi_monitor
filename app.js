@@ -437,14 +437,7 @@ setInterval(async () => {
     netObj.init(fileContentObj.net);
 
     //출력
-    console.log(new Date())
-    console.log(uptimeObj.uptime);
-    console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m);
-    console.log('cpu:',cpuObj.cpuUs,cpuObj.cpuSy,cpuObj.cpuNi,cpuObj.cpuId,cpuObj.cpuWa,cpuObj.cpuHi);
-    console.log('mem:',memObj.memUsage,memObj.totalMemory,memObj.usedMemory,memObj.buffMemory,memObj.cacheMemory,memObj.freeMemory);
-    console.log('disk dbg',diskObj.beforeMmcblkReadSectors,diskObj.beforeMmcblkWriteSectors)
-    console.log(diskObj.diskTotalRead,diskObj.diskTotalWrite,diskObj.mmcblkRead,diskObj.mmcblkWrite,diskObj.sdaRead,diskObj.sdaWrite);
-    console.log(netObj.netReceive, netObj.netTransmit);
+
 
     //디버깅 - 파일에 값 출력
     const debugLine = {
