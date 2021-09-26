@@ -297,9 +297,10 @@ const memObj = {
 
             this.totalMemory = parseInt(lines[0].match(regInt)[0]);
             this.freeMemory = parseInt(lines[1].match(regInt)[0]);
-            this.usedMemory = this.totalMemory - this.freeMemory;
+            
             this.buffMemory = parseInt(lines[3].match(regInt)[0]);
             this.cacheMemory = parseInt(lines[4].match(regInt)[0]);
+            this.usedMemory = this.totalMemory - this.availableMemory;
             this.availableMemory = parseInt(lines[2].match(regInt)[0]);
             this.totalSwap = parseInt(lines[14].match(regInt)[0]);
             this.freeSwap = parseInt(lines[15].match(regInt)[0]);
