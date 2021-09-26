@@ -154,8 +154,8 @@ const cpuObj = {
             this.cpu3Usage = 100 - this.cpu3id;
             
             this.beforeCpuUs = parseInt(parseCpu[0]); 
-            this.beforeCpuSy = parseInt(parseCpu[1]); 
-            this.beforeCpuNi = parseInt(parseCpu[2]); 
+            this.beforeCpuNi = parseInt(parseCpu[1]); 
+            this.beforeCpuSy = parseInt(parseCpu[2]); 
             this.beforeCpuId = parseInt(parseCpu[3]); 
             this.beforeCpuWa = parseInt(parseCpu[4]); 
             this.beforeCpuHi = parseInt(parseCpu[5]); 
