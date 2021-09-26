@@ -397,6 +397,7 @@ const netObj = {
                 const netName = stats[0];
                 switch(netName) {
                     case 'eht0': {
+                        console.log(stats)
                         const receiveBytes = parseInt(stats[1]);
                         const transmitBytes = parseInt(stats[9]);
                         
