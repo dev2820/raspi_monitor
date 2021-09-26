@@ -338,7 +338,6 @@ const diskObj = {
             //values[index]: [3]:장치이름, 
 
             values.forEach(stats=> {
-                console.log(stats)
                 const deviceName = stats[2];
                 switch(deviceName) {
                     case 'mmcblk0': {
