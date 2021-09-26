@@ -431,6 +431,7 @@ setInterval(async () => {
     diskObj.init(fileContentObj.disk);
     netObj.init(fileContentObj.net);
 
+    console.log(new Date())
     console.log(uptimeObj.uptime);
     console.log(loadavgObj.loadavg1m,loadavgObj.loadavg5m,loadavgObj.loadavg15m);
     console.log('cpu:',cpuObj.cpuUsage,cpuObj.cpuUs,cpuObj.cpuSy,cpuObj.cpuNi,cpuObj.cpuId);
