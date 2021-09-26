@@ -339,24 +339,24 @@ const diskObj = {
 
             values.forEach(stats=> {
                 console.log(stats)
-                const deviceName = stats[3];
+                const deviceName = stats[2];
                 switch(deviceName) {
                     case 'mmcblk0': {
-                        const mmcblkReadSectors = parseInt(stats[6]); // 읽은 섹터 수
+                        const mmcblkReadSectors = parseInt(stats[5]); // 읽은 섹터 수
                         this.mmcblkRead = ((mmcblkReadSectors - this.beforeMmcblkReadSectors) / 2)/INTERVAL;
                         this.beforeMmcblkReadSectors = mmcblkReadSectors;
 
-                        const mmcblkWriteSectors = parseInt(stats[10]); // 쓴 섹터 수
+                        const mmcblkWriteSectors = parseInt(stats[9]); // 쓴 섹터 수
                         this.mmcblkWrite = ((mmcblkWriteSectors - this.beforeMmcblkWriteSectors) / 2)/INTERVAL;
                         this.beforeMmcblkWriteSectors = mmcblkWriteSectors;
                         break;
                     }
                     case 'sda': {
-                        const sdaReadSectors = parseInt(stats[6]); // 읽은 섹터 수
+                        const sdaReadSectors = parseInt(stats[5]); // 읽은 섹터 수
                         this.sdaRead = ((sdaReadSectors - this.beforeSdaReadSectors) / 2)/INTERVAL;
                         this.beforeSdaReadSectors = sdaReadSectors;
 
-                        const sdaWriteSectors = parseInt(stats[10]); // 쓴 섹터 수
+                        const sdaWriteSectors = parseInt(stats[9]); // 쓴 섹터 수
                         this.sdaWrite = ((sdaWriteSectors - this.beforeSdaWriteSectors) / 2)/INTERVAL;
                         this.beforeSdaWriteSectors = sdaWriteSectors;
                         break;
