@@ -484,3 +484,4 @@ setInterval(async () => {
     fs.writeFile('log.json',debugLine);
 },INTERVAL*1000);
 
+fs.writeFile('log.json',"exit");
