@@ -703,31 +703,31 @@ const mainLoop = async (interval,objs,dbOptions) => {
             let [row,field] = countList[0][0];
             let cnt = row['cnt'];
             if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM cpu_status ORDER BY date DESC limit ${cnt-300}`;
+                const deleteLatest300Query = `DELETE FROM cpu_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
             [row,field] = countList[0][0];
             cnt =  row['cnt'];
             if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM mem_status ORDER BY date DESC limit ${cnt-300}`;
+                const deleteLatest300Query = `DELETE FROM memory_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
             [row,field] = countList[0][0];
             cnt =  row['cnt'];
             if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM io_status ORDER BY date DESC limit ${cnt-300}`;
+                const deleteLatest300Query = `DELETE FROM io_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
             [row,field] = countList[0][0];
             cnt =  row['cnt'];
             if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM network_status ORDER BY date DESC limit ${cnt-300}`;
+                const deleteLatest300Query = `DELETE FROM network_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
             [row,field] = countList[0][0];
             cnt =  row['cnt'];
             if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM summary_status ORDER BY date DESC limit ${cnt-300}`;
+                const deleteLatest300Query = `DELETE FROM summary_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
 
