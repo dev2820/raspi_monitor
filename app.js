@@ -681,6 +681,9 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 objs.netObj.netTransmit.toFixed(1)
             ]));
             await Promise.all(promiseList)
+            connectionList.forEach(connection=>{
+                connection.commit();
+            })
             const cpuCountQuery = `SELECT COUNT(*) AS cnt FROM cpu_status`
             const memCountQuery = `SELECT COUNT(*) AS cnt FROM memory_status`
             const ioCountQuery = `SELECT COUNT(*) AS cnt FROM io_status`
@@ -695,10 +698,35 @@ const mainLoop = async (interval,objs,dbOptions) => {
             promiseList.push(connectionList[4].query(summaryCountQuery))
             
             const countList = await Promise.all(promiseList);
-            countList.forEach(count=>{
-                console.log(count)
-            })
-            console.log("\n")
+            promiseList.splice(0);
+            let cnt = countList[0][0]['cnt'];
+            if(cnt>300) {
+                const deleteLatest300Query = `DELETE FROM cpu_status ORDER BY date limit ${cnt-300}`;
+                promiseList.push(connectionList[0].query(deleteLatest300Query));
+            }
+            cnt = countList[1][0]['cnt'];
+            if(cnt>300) {
+                const deleteLatest300Query = `DELETE FROM mem_status ORDER BY date limit ${cnt-300}`;
+                promiseList.push(connectionList[0].query(deleteLatest300Query));
+            }
+            cnt = countList[2][0]['cnt'];
+            if(cnt>300) {
+                const deleteLatest300Query = `DELETE FROM io_status ORDER BY date limit ${cnt-300}`;
+                promiseList.push(connectionList[0].query(deleteLatest300Query));
+            }
+            cnt = countList[3][0]['cnt'];
+            if(cnt>300) {
+                const deleteLatest300Query = `DELETE FROM network_status ORDER BY date limit ${cnt-300}`;
+                promiseList.push(connectionList[0].query(deleteLatest300Query));
+            }
+            cnt = countList[4][0]['cnt'];
+            if(cnt>300) {
+                const deleteLatest300Query = `DELETE FROM summary_status ORDER BY date limit ${cnt-300}`;
+                promiseList.push(connectionList[0].query(deleteLatest300Query));
+            }
+            console.log(cnt)
+            await Promise.all(promiseList);
+
             connectionList.forEach(connection=>{
                 connection.commit();
                 connection.release();
