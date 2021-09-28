@@ -695,7 +695,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
                     "15m":objs.loadavgObj.loadavg15m,
                 },
                 "cpu": {
-                    cpuUsage:objscpuObj.cpuUsage.toFixed(1),
+                    cpuUsage:objs.cpuObj.cpuUsage.toFixed(1),
                     us:objs.cpuObj.cpuUs.toFixed(1),
                     sy:objs.cpuObj.cpuSy.toFixed(1),
                     ni:objs.cpuObj.cpuNi.toFixed(1),
