@@ -567,7 +567,7 @@ const makeConnectList = async (option) => {
 
     return connectionList;
 }
-const mainLoop = (interval,objs,dbOptions) => {
+const mainLoop = async (interval,objs,dbOptions) => {
     try {
         await getValuesFromFileToObjs(objs);
         const connectionList = await makeConnectList(dbOptions);
