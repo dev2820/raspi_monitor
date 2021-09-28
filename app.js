@@ -3,10 +3,15 @@
 const fs = require('fs/promises')
 const { createPool } = require('mysql2/promise');
 const path = require('path')
+const moment = require('moment');
 const { Buffer } = require('buffer')
 require('dotenv').config(); // dotenv 사용
 
 const INTERVAL = process.env.INTERVAL;
+const HOST = process.env.HOST;
+const USER = process.env.USER;
+const PASSWORD = process.env.PASSWORD;
+const DATABASE = process.env.DATABASE;
 const asyncProcFilesRead = async () => {
     const filePathList = [
         "/proc/uptime",      // uptime 정보
@@ -306,7 +311,7 @@ const memObj = {
             this.totalSwap = parseInt(lines[14].match(regInt)[0]);
             this.freeSwap = parseInt(lines[15].match(regInt)[0]);
             this.usedSwap = this.totalSwap - this.freeSwap;
-            this.memUsage = this.usedMemory/this.totalMemory;
+            this.memUsage = (this.usedMemory/this.totalMemory)*100.0;
 
             this.isInit=true;
         }
@@ -423,64 +428,310 @@ const netObj = {
     netReceive: 0,
 	netTransmit: 0
 }
-
-setInterval(async () => {
+/* cpu_status table insert용 쿼리 */
+const cpuInsertQuery = `INSERT INTO cpu_status(
+    date,
+    cpu_usage,
+    cpu_us,
+    cpu_sy,
+    cpu_ni,
+    cpu_id,
+    cpu_wa,
+    cpu_hi,
+    cpu_si,
+    cpu_st,
+    cpu0_us,
+    cpu0_sy,
+    cpu0_ni,
+    cpu0_id,
+    cpu0_wa,
+    cpu0_hi,
+    cpu0_si,
+    cpu0_st,
+    cpu1_us,
+    cpu1_sy,
+    cpu1_ni,
+    cpu1_id,
+    cpu1_wa,
+    cpu1_hi,
+    cpu1_si,
+    cpu1_st,
+    cpu2_us,
+    cpu2_sy,
+    cpu2_ni,
+    cpu2_id,
+    cpu2_wa,
+    cpu2_hi,
+    cpu2_si,
+    cpu2_st,
+    cpu3_us,
+    cpu3_sy,
+    cpu3_ni,
+    cpu3_id,
+    cpu3_wa,
+    cpu3_hi,
+    cpu3_si,
+    cpu3_st
+) VALUES(
+    ?,?,?,?,?,?,?,?,?,?,
+    ?,?,?,?,?,?,?,?,?,?,
+    ?,?,?,?,?,?,?,?,?,?,
+    ?,?,?,?,?,?,?,?,?,?,
+    ?,?
+)`;
+/* memory_status table insert용 쿼리 */
+const memInsertQuery = `INSERT INTO memory_status(
+    date,
+    mem_usage,
+    total_memory,
+    free_memory,
+    used_memory,
+    buff_memory,
+    cache_memory,
+    available_memory,
+    total_swap,
+    free_swap,
+    used_swap
+) VALUES (
+    ?,?,?,?,?,?,?,?,?,?,
+    ?
+)`;
+/* io_status table insert용 쿼리 */
+const ioInsertQuery = `INSERT INTO io_status(
+    date,
+    disk_total_read,
+    disk_total_write,
+    mmcblk_read,
+    mmcblk_write,
+    sda_read,
+    sda_write
+) VALUES (
+    ?,?,?,?,?,?,?
+)`
+/* network_status table insert용 쿼리 */
+const networkInsertQuery = `INSERT INTO network_status(
+    date,
+    net_receive,
+    net_transmit
+) VALUES (
+    ?,?,?
+)`;
+/* summary_status table insert용 쿼리 */
+const summaryInsertQuery = `INSERT INTO summary_status(
+    date,
+    uptime,
+    loadavg_1m,
+    loadavg_5m,
+    loadavg_15m,
+    cpu_usage,
+    mem_usage,
+    disk_total_read,
+    disk_total_write,
+    net_receive,
+    net_transmit
+) VALUES (
+    ?,?,?,?,?,?,?,?,?,?,
+    ?
+)`;
+const getValuesFromFileToObjs = async (objs) => {
     try {
         //파일 읽어오기
         const fileContentObj = await asyncProcFilesRead();
 
-        //파일 내용 가공
-        uptimeObj.init(fileContentObj.uptime);
-        loadavgObj.init(fileContentObj.loadavg);
-        cpuObj.init(fileContentObj.cpu);
-        memObj.init(fileContentObj.mem);
-        diskObj.init(fileContentObj.disk);
-        netObj.init(fileContentObj.net);
+        //파일 내용 저장
+        objs.uptimeObj.init(fileContentObj.uptime);
+        objs.loadavgObj.init(fileContentObj.loadavg);
+        objs.cpuObj.init(fileContentObj.cpu);
+        objs.memObj.init(fileContentObj.mem);
+        objs.diskObj.init(fileContentObj.disk);
+        objs.netObj.init(fileContentObj.net);
 
-        //출력
-
-
-        //디버깅 - 파일에 값 출력
-        const debugLine = {
-            "date":new Date(),
-            "uptime":uptimeObj.uptime,
-            "loadavg": {
-                "1m":loadavgObj.loadavg1m,
-                "5m":loadavgObj.loadavg5m,
-                "15m":loadavgObj.loadavg15m,
-            },
-            "cpu": {
-                cpuUsage:cpuObj.cpuUsage.toFixed(1),
-                us:cpuObj.cpuUs.toFixed(1),
-                sy:cpuObj.cpuSy.toFixed(1),
-                ni:cpuObj.cpuNi.toFixed(1),
-                id:cpuObj.cpuId.toFixed(1),
-                wa:cpuObj.cpuWa.toFixed(1),
-                hi:cpuObj.cpuHi.toFixed(1),
-            },
-            "mem": {
-                "memUsage":memObj.memUsage.toFixed(1),
-                "memTotal":memObj.totalMemory.toFixed(1),
-                "memUsed":memObj.usedMemory.toFixed(1),
-                "memBuff":memObj.buffMemory.toFixed(1),
-                "memCache":memObj.cacheMemory.toFixed(1),
-                "memFree":memObj.freeMemory.toFixed(1)
-            },
-            "disk": {
-                "totalRead":diskObj.diskTotalRead.toFixed(1),
-                "totalWrite":diskObj.diskTotalWrite.toFixed(1)
-            },
-            "net": {
-                "receive":netObj.netReceive.toFixed(1),
-                "transmit":netObj.netTransmit.toFixed(1)
-            }
-        }
-        fs.writeFile('log.json',JSON.stringify(debugLine));
     }
     catch(err) {
         console.log(err);
         fs.writeFile('log.json',`${new Date()} exit`);
+        return new Error('read file failed')
     }
-},INTERVAL*1000);
+}
+const makeConnectList = async (option) => {
+    const connectionList = [];
+    const pool = createPool({
+        host:option.host,
+        user:option.user,
+        password:option.password,
+        database:option.database,
+        limit:option.limit
+    })
+    for(let i=0;i<option.limit;i++)
+        connectionList.push(await pool.getConnection(async conn=>conn))
 
-fs.writeFile('log.json',"exit");
+    return connectionList;
+}
+const mainLoop = (interval,objs,dbOptions) => {
+    try {
+        await getValuesFromFileToObjs(objs);
+        const connectionList = await makeConnectList(dbOptions);
+        const intervalHandler = setInterval(async () => {
+            //입력 읽어오기 및 저장하기
+            const err = await getValuesFromFileToObjs(objs)
+            if(err){
+                throw err;
+            }
+
+            //출력
+            const promiseList = [];
+            const system_time = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+            connectionList.forEach(connection=>connection.beginTransaction())
+            //cpu_status insert
+            promiseList.push(connectionList[0].query(cpuInsertQuery,[
+                system_time,
+                objs.cpuObj.cpuUsage.toFixed(1),
+                objs.cpuObj.cpu_us.toFixed(1),
+                objs.cpuObj.cpu_sy.toFixed(1),
+                objs.cpuObj.cpu_ni.toFixed(1),
+                objs.cpuObj.cpu_id.toFixed(1),
+                objs.cpuObj.cpu_wa.toFixed(1),
+                objs.cpuObj.cpu_hi.toFixed(1),
+                objs.cpuObj.cpu_si.toFixed(1),
+                objs.cpuObj.cpu_st.toFixed(1),
+                objs.cpuObj.cpu0_us.toFixed(1),
+                objs.cpuObj.cpu0_sy.toFixed(1),
+                objs.cpuObj.cpu0_ni.toFixed(1),
+                objs.cpuObj.cpu0_id.toFixed(1),
+                objs.cpuObj.cpu0_wa.toFixed(1),
+                objs.cpuObj.cpu0_hi.toFixed(1),
+                objs.cpuObj.cpu0_si.toFixed(1),
+                objs.cpuObj.cpu0_st.toFixed(1),
+                objs.cpuObj.cpu1_us.toFixed(1),
+                objs.cpuObj.cpu1_sy.toFixed(1),
+                objs.cpuObj.cpu1_ni.toFixed(1),
+                objs.cpuObj.cpu1_id.toFixed(1),
+                objs.cpuObj.cpu1_wa.toFixed(1),
+                objs.cpuObj.cpu1_hi.toFixed(1),
+                objs.cpuObj.cpu1_si.toFixed(1),
+                objs.cpuObj.cpu1_st.toFixed(1),
+                objs.cpuObj.cpu2_us.toFixed(1),
+                objs.cpuObj.cpu2_sy.toFixed(1),
+                objs.cpuObj.cpu2_ni.toFixed(1),
+                objs.cpuObj.cpu2_id.toFixed(1),
+                objs.cpuObj.cpu2_wa.toFixed(1),
+                objs.cpuObj.cpu2_hi.toFixed(1),
+                objs.cpuObj.cpu2_si.toFixed(1),
+                objs.cpuObj.cpu2_st.toFixed(1),
+                objs.cpuObj.cpu3_us.toFixed(1),
+                objs.cpuObj.cpu3_sy.toFixed(1),
+                objs.cpuObj.cpu3_ni.toFixed(1),
+                objs.cpuObj.cpu3_id.toFixed(1),
+                objs.cpuObj.cpu3_wa.toFixed(1),
+                objs.cpuObj.cpu3_hi.toFixed(1),
+                objs.cpuObj.cpu3_si.toFixed(1),
+                objs.cpuObj.cpu3_st.toFixed(1)
+            ]));
+            //memory_status insert
+            promiseList.push(connectionList[1].query(memInsertQuery,[
+                system_time,
+                objs.memObj.mem_usage.toFixed(1),
+                objs.memObj.total_memory,
+                objs.memObj.free_memory,
+                objs.memObj.used_memory,
+                objs.memObj.buff_memory,
+                objs.memObj.cache_memory,
+                objs.memObj.available_memory,
+                objs.memObj.total_swap,
+                objs.memObj.free_swap,
+                objs.memObj.used_swap
+            ]));
+            //io_status insert
+            promiseList.push(connectionList[2].query(ioInsertQuery,[
+                system_time,
+                objs.diskObj.disk_total_read.toFixed(1),
+                objs.diskObj.disk_total_write.toFixed(1),
+                objs.diskObj.mmcblk_read.toFixed(1),
+                objs.diskObj.mmcblk_write.toFixed(1),
+                objs.diskObj.sda_read.toFixed(1),
+                objs.diskObj.sda_write.toFixed(1)
+            ]));
+            //network_status insert
+            promiseList.push(connectionList[3].query(networkInsertQuery,[
+                system_time,
+                objs.netObj.net_receive.toFixed(1),
+                objs.netObj.net_transmit.toFixed(1),
+            ]));
+            //summary_status insert
+            promiseList.push(connectionList[4].query(summaryInsertQuery,[
+                system_time,
+                objs.uptimeObj.uptime,
+                objs.loadavgObj.loadavg_1m,
+                objs.loadavgObj.loadavg_5m,
+                objs.loadavgObj.loadavg_15m,
+                objs.cpuObj.cpu_usage.toFixed(1),
+                objs.memObj.mem_usage.toFixed(1),
+                objs.diskObj.disk_total_read.toFixed(1),
+                objs.diskObj.disk_total_write.toFixed(1),
+                objs.netObj.net_receive.toFixed(1),
+                objs.netObj.net_transmit.toFixed(1)
+            ]));
+            await Promise.all(promiseList)
+            connectionList.forEach(connection=>{
+                connection.commit();
+                connection.release();
+            })
+            //디버깅 - 파일에 값 출력
+            const debugLine = {
+                "date":new Date(),
+                "uptime":objs.uptimeObj.uptime,
+                "loadavg": {
+                    "1m":objsloadavgObj.loadavg1m,
+                    "5m":objsloadavgObj.loadavg5m,
+                    "15m":objsloadavgObj.loadavg15m,
+                },
+                "cpu": {
+                    cpuUsage:objscpuObj.cpuUsage.toFixed(1),
+                    us:objs.cpuObj.cpuUs.toFixed(1),
+                    sy:objs.cpuObj.cpuSy.toFixed(1),
+                    ni:objs.cpuObj.cpuNi.toFixed(1),
+                    id:objs.cpuObj.cpuId.toFixed(1),
+                    wa:objs.cpuObj.cpuWa.toFixed(1),
+                    hi:objs.cpuObj.cpuHi.toFixed(1),
+                },
+                "mem": {
+                    "memUsage":objs.memObj.memUsage.toFixed(1),
+                    "memTotal":objs.memObj.totalMemory.toFixed(1),
+                    "memUsed":objs.memObj.usedMemory.toFixed(1),
+                    "memBuff":objs.memObj.buffMemory.toFixed(1),
+                    "memCache":objs.memObj.cacheMemory.toFixed(1),
+                    "memFree":objs.memObj.freeMemory.toFixed(1)
+                },
+                "disk": {
+                    "totalRead":objs.diskObj.diskTotalRead.toFixed(1),
+                    "totalWrite":objs.diskObj.diskTotalWrite.toFixed(1)
+                },
+                "net": {
+                    "receive":objs.netObj.netReceive.toFixed(1),
+                    "transmit":objs.netObj.netTransmit.toFixed(1)
+                }
+            }
+            fs.writeFile('log.json',JSON.stringify(debugLine));
+        },interval*1000);
+    }
+    catch(err) {
+        console.log(err);
+        fs.writeFile('log.json',`error occurs at ${new Date()} exit`);
+    }
+}
+const objs = {
+    uptimeObj,
+    loadavgObj,
+    cpuObj,
+    memObj,
+    diskObj,
+    netObj
+}
+const dbOptions = {
+    host:HOST,
+    user:USER,
+    password:PASSWORD,
+    database:DATABASE,
+    limit:5
+}
+mainLoop(INTERVAL,objs,dbOptions);
