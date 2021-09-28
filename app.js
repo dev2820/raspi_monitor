@@ -681,6 +681,24 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 objs.netObj.netTransmit.toFixed(1)
             ]));
             await Promise.all(promiseList)
+            const cpuCountQuery = `SELECT COUNT(*) AS cnt FROM cpu_status`
+            const memCountQuery = `SELECT COUNT(*) AS cnt FROM memory_status`
+            const ioCountQuery = `SELECT COUNT(*) AS cnt FROM io_status`
+            const netCountQuery = `SELECT COUNT(*) AS cnt FROM network_status`
+            const summaryCountQuery = `SELECT COUNT(*) AS cnt FROM summary_status`
+            
+            promiseList.splice(0);
+            promiseList.push(connectionList[0].query(cpuCountQuery))
+            promiseList.push(connectionList[1].query(memCountQuery))
+            promiseList.push(connectionList[2].query(ioCountQuery))
+            promiseList.push(connectionList[3].query(netCountQuery))
+            promiseList.push(connectionList[4].query(summaryCountQuery))
+            
+            const countList = await Promise.all(promiseList);
+            countList.forEach(count=>{
+                console.log(count)
+            })
+            console.log("\n")
             connectionList.forEach(connection=>{
                 connection.commit();
                 connection.release();
