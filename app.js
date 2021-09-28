@@ -118,38 +118,42 @@ const cpuObj = {
             this.cpuHi =  (parseInt(parseCpu[5]) - this.beforeCpuHi)/diffTotal*100.0;
             this.cpuSi =  (parseInt(parseCpu[6]) - this.beforeCpuSi)/diffTotal*100.0;
             this.cpuSt =  (parseInt(parseCpu[7]) - this.beforeCpuSt)/diffTotal*100.0;
-            this.cpu0us = (parseInt(parseCpu0[0]) - this.beforeCpu0us)*diffTotal0/100.0;
-            this.cpu0ni = (parseInt(parseCpu0[1]) - this.beforeCpu0ni)*diffTotal0/100.0;
-            this.cpu0sy = (parseInt(parseCpu0[2]) - this.beforeCpu0sy)*diffTotal0/100.0;
-            this.cpu0id = (parseInt(parseCpu0[3]) - this.beforeCpu0id)*diffTotal0/100.0;
-            this.cpu0wa = (parseInt(parseCpu0[4]) - this.beforeCpu0wa)*diffTotal0/100.0;
-            this.cpu0hi = (parseInt(parseCpu0[5]) - this.beforeCpu0hi)*diffTotal0/100.0;
-            this.cpu0si = (parseInt(parseCpu0[6]) - this.beforeCpu0si)*diffTotal0/100.0;
-            this.cpu0st = (parseInt(parseCpu0[7]) - this.beforeCpu0st)*diffTotal0/100.0;
-            this.cpu1us = (parseInt(parseCpu1[0]) - this.beforeCpu1us)*diffTotal1/100.0;
-            this.cpu1ni = (parseInt(parseCpu1[1]) - this.beforeCpu0ni)*diffTotal1/100.0;
-            this.cpu1sy = (parseInt(parseCpu1[2]) - this.beforeCpu1sy)*diffTotal1/100.0;
-            this.cpu1id = (parseInt(parseCpu1[3]) - this.beforeCpu1id)*diffTotal1/100.0;
-            this.cpu1wa = (parseInt(parseCpu1[4]) - this.beforeCpu1wa)*diffTotal1/100.0;
-            this.cpu1hi = (parseInt(parseCpu1[5]) - this.beforeCpu1hi)*diffTotal1/100.0;
-            this.cpu1si = (parseInt(parseCpu1[6]) - this.beforeCpu1si)*diffTotal1/100.0;
-            this.cpu1st = (parseInt(parseCpu1[7]) - this.beforeCpu1st)*diffTotal1/100.0;
-            this.cpu2us = (parseInt(parseCpu2[0]) - this.beforeCpu2us)*diffTotal2/100.0;
-            this.cpu2ni = (parseInt(parseCpu2[1]) - this.beforeCpu2ni)*diffTotal2/100.0;
-            this.cpu2sy = (parseInt(parseCpu2[2]) - this.beforeCpu2sy)*diffTotal2/100.0;
-            this.cpu2id = (parseInt(parseCpu2[3]) - this.beforeCpu2id)*diffTotal2/100.0;
-            this.cpu2wa = (parseInt(parseCpu2[4]) - this.beforeCpu2wa)*diffTotal2/100.0;
-            this.cpu2hi = (parseInt(parseCpu2[5]) - this.beforeCpu2hi)*diffTotal2/100.0;
-            this.cpu2si = (parseInt(parseCpu2[6]) - this.beforeCpu2si)*diffTotal2/100.0;
-            this.cpu2st = (parseInt(parseCpu2[7]) - this.beforeCpu2st)*diffTotal2/100.0;
-            this.cpu3us = (parseInt(parseCpu3[0]) - this.beforeCpu3us)*diffTotal3/100.0;
-            this.cpu3ni = (parseInt(parseCpu3[1]) - this.beforeCpu3ni)*diffTotal3/100.0;
-            this.cpu3sy = (parseInt(parseCpu3[2]) - this.beforeCpu3sy)*diffTotal3/100.0;
-            this.cpu3id = (parseInt(parseCpu3[3]) - this.beforeCpu3id)*diffTotal3/100.0;
-            this.cpu3wa = (parseInt(parseCpu3[4]) - this.beforeCpu3wa)*diffTotal3/100.0;
-            this.cpu3hi = (parseInt(parseCpu3[5]) - this.beforeCpu3hi)*diffTotal3/100.0;
-            this.cpu3si = (parseInt(parseCpu3[6]) - this.beforeCpu3si)*diffTotal3/100.0;
-            this.cpu3st = (parseInt(parseCpu3[7]) - this.beforeCpu3st)*diffTotal3/100.0;
+            
+            this.cpu0us = (parseInt(parseCpu0[0]) - this.beforeCpu0us)/diffTotal0*100.0;
+            this.cpu0ni = (parseInt(parseCpu0[1]) - this.beforeCpu0ni)/diffTotal0*100.0;
+            this.cpu0sy = (parseInt(parseCpu0[2]) - this.beforeCpu0sy)/diffTotal0*100.0;
+            this.cpu0id = (parseInt(parseCpu0[3]) - this.beforeCpu0id)/diffTotal0*100.0;
+            this.cpu0wa = (parseInt(parseCpu0[4]) - this.beforeCpu0wa)/diffTotal0*100.0;
+            this.cpu0hi = (parseInt(parseCpu0[5]) - this.beforeCpu0hi)/diffTotal0*100.0;
+            this.cpu0si = (parseInt(parseCpu0[6]) - this.beforeCpu0si)/diffTotal0*100.0;
+            this.cpu0st = (parseInt(parseCpu0[7]) - this.beforeCpu0st)/diffTotal0*100.0;
+            
+            this.cpu1us = (parseInt(parseCpu1[0]) - this.beforeCpu1us)/diffTotal1*100.0;
+            this.cpu1ni = (parseInt(parseCpu1[1]) - this.beforeCpu1ni)/diffTotal1*100.0;
+            this.cpu1sy = (parseInt(parseCpu1[2]) - this.beforeCpu1sy)/diffTotal1*100.0;
+            this.cpu1id = (parseInt(parseCpu1[3]) - this.beforeCpu1id)/diffTotal1*100.0;
+            this.cpu1wa = (parseInt(parseCpu1[4]) - this.beforeCpu1wa)/diffTotal1*100.0;
+            this.cpu1hi = (parseInt(parseCpu1[5]) - this.beforeCpu1hi)/diffTotal1*100.0;
+            this.cpu1si = (parseInt(parseCpu1[6]) - this.beforeCpu1si)/diffTotal1*100.0;
+            this.cpu1st = (parseInt(parseCpu1[7]) - this.beforeCpu1st)/diffTotal1*100.0;
+            
+            this.cpu2us = (parseInt(parseCpu2[0]) - this.beforeCpu2us)/diffTotal2*100.0;
+            this.cpu2ni = (parseInt(parseCpu2[1]) - this.beforeCpu2ni)/diffTotal2*100.0;
+            this.cpu2sy = (parseInt(parseCpu2[2]) - this.beforeCpu2sy)/diffTotal2*100.0;
+            this.cpu2id = (parseInt(parseCpu2[3]) - this.beforeCpu2id)/diffTotal2*100.0;
+            this.cpu2wa = (parseInt(parseCpu2[4]) - this.beforeCpu2wa)/diffTotal2*100.0;
+            this.cpu2hi = (parseInt(parseCpu2[5]) - this.beforeCpu2hi)/diffTotal2*100.0;
+            this.cpu2si = (parseInt(parseCpu2[6]) - this.beforeCpu2si)/diffTotal2*100.0;
+            this.cpu2st = (parseInt(parseCpu2[7]) - this.beforeCpu2st)/diffTotal2*100.0;
+            
+            this.cpu3us = (parseInt(parseCpu3[0]) - this.beforeCpu3us)/diffTotal3*100.0;
+            this.cpu3ni = (parseInt(parseCpu3[1]) - this.beforeCpu3ni)/diffTotal3*100.0;
+            this.cpu3sy = (parseInt(parseCpu3[2]) - this.beforeCpu3sy)/diffTotal3*100.0;
+            this.cpu3id = (parseInt(parseCpu3[3]) - this.beforeCpu3id)/diffTotal3*100.0;
+            this.cpu3wa = (parseInt(parseCpu3[4]) - this.beforeCpu3wa)/diffTotal3*100.0;
+            this.cpu3hi = (parseInt(parseCpu3[5]) - this.beforeCpu3hi)/diffTotal3*100.0;
+            this.cpu3si = (parseInt(parseCpu3[6]) - this.beforeCpu3si)/diffTotal3*100.0;
+            this.cpu3st = (parseInt(parseCpu3[7]) - this.beforeCpu3st)/diffTotal3*100.0;
 
             //cpuUsage 계산 (100 - idle)
             this.cpuUsage = 100 - this.cpuId;
@@ -166,6 +170,7 @@ const cpuObj = {
             this.beforeCpuHi = parseInt(parseCpu[5]); 
             this.beforeCpuSi = parseInt(parseCpu[6]); 
             this.beforeCpuSt = parseInt(parseCpu[7]); 
+
             this.beforeCpu0us = parseInt(parseCpu0[0]); 
             this.beforeCpu0ni = parseInt(parseCpu0[1]); 
             this.beforeCpu0sy = parseInt(parseCpu0[2]); 
@@ -174,6 +179,7 @@ const cpuObj = {
             this.beforeCpu0hi = parseInt(parseCpu0[5]); 
             this.beforeCpu0si = parseInt(parseCpu0[6]); 
             this.beforeCpu0st = parseInt(parseCpu0[7]); 
+
             this.beforeCpu1us = parseInt(parseCpu1[0]); 
             this.beforeCpu1ni = parseInt(parseCpu1[1]); 
             this.beforeCpu1sy = parseInt(parseCpu1[2]); 
@@ -182,6 +188,7 @@ const cpuObj = {
             this.beforeCpu1hi = parseInt(parseCpu1[5]); 
             this.beforeCpu1si = parseInt(parseCpu1[6]); 
             this.beforeCpu1st = parseInt(parseCpu1[7]); 
+
             this.beforeCpu2us = parseInt(parseCpu2[0]); 
             this.beforeCpu2ni = parseInt(parseCpu2[1]); 
             this.beforeCpu2sy = parseInt(parseCpu2[2]); 
@@ -190,6 +197,7 @@ const cpuObj = {
             this.beforeCpu2hi = parseInt(parseCpu2[5]); 
             this.beforeCpu2si = parseInt(parseCpu2[6]); 
             this.beforeCpu2st = parseInt(parseCpu2[7]); 
+
             this.beforeCpu3us = parseInt(parseCpu3[0]); 
             this.beforeCpu3ni = parseInt(parseCpu3[1]); 
             this.beforeCpu3sy = parseInt(parseCpu3[2]); 
@@ -198,6 +206,7 @@ const cpuObj = {
             this.beforeCpu3hi = parseInt(parseCpu3[5]); 
             this.beforeCpu3si = parseInt(parseCpu3[6]); 
             this.beforeCpu3st = parseInt(parseCpu3[7]); 
+
             this.isInit=true;
         }
         catch(err) {
