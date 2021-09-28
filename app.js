@@ -702,7 +702,6 @@ const mainLoop = async (interval,objs,dbOptions) => {
             
             let [row,field] = countList[0][0];
             let cnt = row['cnt'];
-            console.log(cnt)
             if(cnt>300) {
                 const deleteLatest300Query = `DELETE FROM cpu_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
@@ -732,7 +731,6 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
 
-            console.log(cnt)
             await Promise.all(promiseList);
 
             connectionList.forEach(connection=>{
