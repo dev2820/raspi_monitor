@@ -699,32 +699,39 @@ const mainLoop = async (interval,objs,dbOptions) => {
             
             const countList = await Promise.all(promiseList);
             promiseList.splice(0);
-            console.log(countList[0][0][0]['cnt'])
-            let {cnt} = countList[0][0];
+            
+            let [row,field] = countList[0][0];
+            let cnt = row[0]['cnt'];
+            console.log(cnt)
             if(cnt>300) {
                 const deleteLatest300Query = `DELETE FROM cpu_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
-            cnt = countList[1][0]['cnt'];
+            [row,field] = countList[0][0];
+            cnt = row[0]['cnt'];
             if(cnt>300) {
                 const deleteLatest300Query = `DELETE FROM mem_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
-            cnt = countList[2][0]['cnt'];
+            [row,field] = countList[0][0];
+            cnt = row[0]['cnt'];
             if(cnt>300) {
                 const deleteLatest300Query = `DELETE FROM io_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
-            cnt = countList[3][0]['cnt'];
+            [row,field] = countList[0][0];
+            cnt = row[0]['cnt'];
             if(cnt>300) {
                 const deleteLatest300Query = `DELETE FROM network_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
-            cnt = countList[4][0]['cnt'];
+            [row,field] = countList[0][0];
+            cnt = row[0]['cnt'];
             if(cnt>300) {
                 const deleteLatest300Query = `DELETE FROM summary_status ORDER BY date limit ${cnt-300}`;
                 promiseList.push(connectionList[0].query(deleteLatest300Query));
             }
+
             console.log(cnt)
             await Promise.all(promiseList);
 
