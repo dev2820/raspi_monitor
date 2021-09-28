@@ -630,46 +630,46 @@ const mainLoop = async (interval,objs,dbOptions) => {
             //memory_status insert
             promiseList.push(connectionList[1].query(memInsertQuery,[
                 system_time,
-                objs.memObj.mem_usage.toFixed(1),
-                objs.memObj.total_memory,
-                objs.memObj.free_memory,
-                objs.memObj.used_memory,
-                objs.memObj.buff_memory,
-                objs.memObj.cache_memory,
-                objs.memObj.available_memory,
-                objs.memObj.total_swap,
-                objs.memObj.free_swap,
-                objs.memObj.used_swap
+                objs.memObj.memUsage.toFixed(1),
+                objs.memObj.totalMemory,
+                objs.memObj.freeMemory,
+                objs.memObj.usedMemory,
+                objs.memObj.buffMemory,
+                objs.memObj.cacheMemory,
+                objs.memObj.availableMemory,
+                objs.memObj.totalSwap,
+                objs.memObj.freeSwap,
+                objs.memObj.usedSwap
             ]));
             //io_status insert
             promiseList.push(connectionList[2].query(ioInsertQuery,[
                 system_time,
-                objs.diskObj.disk_total_read.toFixed(1),
-                objs.diskObj.disk_total_write.toFixed(1),
-                objs.diskObj.mmcblk_read.toFixed(1),
-                objs.diskObj.mmcblk_write.toFixed(1),
-                objs.diskObj.sda_read.toFixed(1),
-                objs.diskObj.sda_write.toFixed(1)
+                objs.diskObj.diskTotalRead.toFixed(1),
+                objs.diskObj.diskTotalWrite.toFixed(1),
+                objs.diskObj.mmcblkRead.toFixed(1),
+                objs.diskObj.mmcblkWrite.toFixed(1),
+                objs.diskObj.sdaRead.toFixed(1),
+                objs.diskObj.sdaWrite.toFixed(1)
             ]));
             //network_status insert
             promiseList.push(connectionList[3].query(networkInsertQuery,[
                 system_time,
-                objs.netObj.net_receive.toFixed(1),
-                objs.netObj.net_transmit.toFixed(1),
+                objs.netObj.netReceive.toFixed(1),
+                objs.netObj.netTransmit.toFixed(1),
             ]));
             //summary_status insert
             promiseList.push(connectionList[4].query(summaryInsertQuery,[
                 system_time,
                 objs.uptimeObj.uptime,
-                objs.loadavgObj.loadavg_1m,
-                objs.loadavgObj.loadavg_5m,
-                objs.loadavgObj.loadavg_15m,
-                objs.cpuObj.cpu_usage.toFixed(1),
-                objs.memObj.mem_usage.toFixed(1),
-                objs.diskObj.disk_total_read.toFixed(1),
-                objs.diskObj.disk_total_write.toFixed(1),
-                objs.netObj.net_receive.toFixed(1),
-                objs.netObj.net_transmit.toFixed(1)
+                objs.loadavgObj.loadavg1m,
+                objs.loadavgObj.loadavg5m,
+                objs.loadavgObj.loadavg15m,
+                objs.cpuObj.cpuUsage.toFixed(1),
+                objs.memObj.memUsage.toFixed(1),
+                objs.diskObj.diskTotalRead.toFixed(1),
+                objs.diskObj.diskTotalWrite.toFixed(1),
+                objs.netObj.netReceive.toFixed(1),
+                objs.netObj.netTransmit.toFixed(1)
             ]));
             await Promise.all(promiseList)
             connectionList.forEach(connection=>{
