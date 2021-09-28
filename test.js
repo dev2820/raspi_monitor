@@ -1,5 +1,4 @@
-const testString = "cpu 0 1 2 3 4 5 6";
-
-const reg = /[0-9]+/g;
-
-console.log(testString.match(reg))
+const tableList = ['cpu_status','memory_status','io_status','network_status','summary_status'];
+tableList.forEach((tableName,index)=>{
+    console.log(tableName,index)
+})

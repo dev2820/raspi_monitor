@@ -2,16 +2,20 @@
 
 const fs = require('fs/promises')
 const { createPool } = require('mysql2/promise');
-const path = require('path')
 const moment = require('moment');
-const { Buffer } = require('buffer')
-require('dotenv').config(); // dotenv 사용
+require('dotenv').config();
 
 const INTERVAL = process.env.INTERVAL;
 const HOST = process.env.HOST;
 const USER = process.env.USER;
 const PASSWORD = process.env.PASSWORD;
 const DATABASE = process.env.DATABASE;
+
+/*
+asyncProcFilesRead
+
+파일 경로로부터 파일을 읽고 내용을 반환한다.
+*/
 const asyncProcFilesRead = async () => {
     const filePathList = [
         "/proc/uptime",      // uptime 정보
@@ -542,6 +546,14 @@ const summaryInsertQuery = `INSERT INTO summary_status(
     ?,?,?,?,?,?,?,?,?,?,
     ?
 )`;
+/*
+getValuesFromFileToObjs
+params: {
+    objs: 파일 내용을 저장할 객체(uptimeObj,loadavgObj,cpuObj,memObj,diskObj,netObj)
+}
+
+설명: 파일을 읽고 내용을 objs에 나누어 저장함
+*/
 const getValuesFromFileToObjs = async (objs) => {
     try {
         //파일 읽어오기
@@ -562,6 +574,18 @@ const getValuesFromFileToObjs = async (objs) => {
         return new Error('read file failed')
     }
 }
+/*
+makeConnectList
+params: {
+    host: 호스트(ip)
+    user: 계정이름
+    password: 계정비밀번호
+    database: 사용할 db 이름
+    limit: 연결을 유지할 maximum 개수
+}
+
+설명: createPool로 데이터베이스 연결을 만들고 getConnection으로 table마다 사용할 연결을 가져옴
+*/
 const makeConnectList = async (option) => {
     const connectionList = [];
     const pool = createPool({
@@ -576,10 +600,11 @@ const makeConnectList = async (option) => {
 
     return connectionList;
 }
+
 const mainLoop = async (interval,objs,dbOptions) => {
     try {
-        await getValuesFromFileToObjs(objs);
-        const connectionList = await makeConnectList(dbOptions);
+        await getValuesFromFileToObjs(objs); // 초기값 불러와서 before값 세팅
+        const connectionList = await makeConnectList(dbOptions);// connection 가져오기
         const intervalHandler = setInterval(async () => {
             //입력 읽어오기 및 저장하기
             const err = await getValuesFromFileToObjs(objs)
@@ -587,7 +612,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 throw err;
             }
 
-            //출력
+            //INSERT 쿼리 실행
             const promiseList = [];
             const system_time = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
             connectionList.forEach(connection=>connection.beginTransaction())
@@ -684,95 +709,30 @@ const mainLoop = async (interval,objs,dbOptions) => {
             connectionList.forEach(connection=>{
                 connection.commit();
             })
-            const cpuCountQuery = `SELECT COUNT(*) AS cnt FROM cpu_status`
-            const memCountQuery = `SELECT COUNT(*) AS cnt FROM memory_status`
-            const ioCountQuery = `SELECT COUNT(*) AS cnt FROM io_status`
-            const netCountQuery = `SELECT COUNT(*) AS cnt FROM network_status`
-            const summaryCountQuery = `SELECT COUNT(*) AS cnt FROM summary_status`
-            
-            promiseList.splice(0);
-            promiseList.push(connectionList[0].query(cpuCountQuery))
-            promiseList.push(connectionList[1].query(memCountQuery))
-            promiseList.push(connectionList[2].query(ioCountQuery))
-            promiseList.push(connectionList[3].query(netCountQuery))
-            promiseList.push(connectionList[4].query(summaryCountQuery))
-            
-            const countList = await Promise.all(promiseList);
-            promiseList.splice(0);
-            
-            let [row,field] = countList[0][0];
-            let cnt = row['cnt'];
-            if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM cpu_status ORDER BY date limit ${cnt-300}`;
-                promiseList.push(connectionList[0].query(deleteLatest300Query));
-            }
-            [row,field] = countList[0][0];
-            cnt =  row['cnt'];
-            if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM memory_status ORDER BY date limit ${cnt-300}`;
-                promiseList.push(connectionList[0].query(deleteLatest300Query));
-            }
-            [row,field] = countList[0][0];
-            cnt =  row['cnt'];
-            if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM io_status ORDER BY date limit ${cnt-300}`;
-                promiseList.push(connectionList[0].query(deleteLatest300Query));
-            }
-            [row,field] = countList[0][0];
-            cnt =  row['cnt'];
-            if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM network_status ORDER BY date limit ${cnt-300}`;
-                promiseList.push(connectionList[0].query(deleteLatest300Query));
-            }
-            [row,field] = countList[0][0];
-            cnt =  row['cnt'];
-            if(cnt>300) {
-                const deleteLatest300Query = `DELETE FROM summary_status ORDER BY date limit ${cnt-300}`;
-                promiseList.push(connectionList[0].query(deleteLatest300Query));
-            }
 
+            const tableList = ['cpu_status','memory_status','io_status','network_status','summary_status'];
+            //각 table별 tuple 개수 새기
+            promiseList.splice(0);
+            tableList.forEach((tableName,index)=>{
+                const query = `SELECT COUNT(*) AS cnt FROM ${tableName}`;
+                promiseList.push(connectionList[0].query(query))
+            })
+            const countList = await Promise.all(promiseList);
+            //tuple이 300개가 넘어가면 가장 오래된 tuple부터 지움(300개 유지)
+            promiseList.splice(0);
+            tableList.forEach((tableName,index)=>{
+                let [row,field] = countList[index][0];
+                if(row['cnt']>300) {
+                    const deleteLatest300Query = `DELETE FROM ${tableName} ORDER BY date limit ${cnt-300}`;
+                    promiseList.push(connectionList[0].query(deleteLatest300Query));
+                }
+            })
             await Promise.all(promiseList);
 
             connectionList.forEach(connection=>{
                 connection.commit();
                 connection.release();
             })
-            //디버깅 - 파일에 값 출력
-            const debugLine = {
-                "date":new Date(),
-                "uptime":objs.uptimeObj.uptime,
-                "loadavg": {
-                    "1m":objs.loadavgObj.loadavg1m,
-                    "5m":objs.loadavgObj.loadavg5m,
-                    "15m":objs.loadavgObj.loadavg15m,
-                },
-                "cpu": {
-                    cpuUsage:objs.cpuObj.cpuUsage.toFixed(1),
-                    us:objs.cpuObj.cpuUs.toFixed(1),
-                    sy:objs.cpuObj.cpuSy.toFixed(1),
-                    ni:objs.cpuObj.cpuNi.toFixed(1),
-                    id:objs.cpuObj.cpuId.toFixed(1),
-                    wa:objs.cpuObj.cpuWa.toFixed(1),
-                    hi:objs.cpuObj.cpuHi.toFixed(1),
-                },
-                "mem": {
-                    "memUsage":objs.memObj.memUsage.toFixed(1),
-                    "memTotal":objs.memObj.totalMemory.toFixed(1),
-                    "memUsed":objs.memObj.usedMemory.toFixed(1),
-                    "memBuff":objs.memObj.buffMemory.toFixed(1),
-                    "memCache":objs.memObj.cacheMemory.toFixed(1),
-                    "memFree":objs.memObj.freeMemory.toFixed(1)
-                },
-                "disk": {
-                    "totalRead":objs.diskObj.diskTotalRead.toFixed(1),
-                    "totalWrite":objs.diskObj.diskTotalWrite.toFixed(1)
-                },
-                "net": {
-                    "receive":objs.netObj.netReceive.toFixed(1),
-                    "transmit":objs.netObj.netTransmit.toFixed(1)
-                }
-            }
-            fs.writeFile('log.json',JSON.stringify(debugLine));
         },interval*1000);
     }
     catch(err) {
