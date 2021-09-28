@@ -690,9 +690,9 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 "date":new Date(),
                 "uptime":objs.uptimeObj.uptime,
                 "loadavg": {
-                    "1m":objsloadavgObj.loadavg1m,
-                    "5m":objsloadavgObj.loadavg5m,
-                    "15m":objsloadavgObj.loadavg15m,
+                    "1m":objs.loadavgObj.loadavg1m,
+                    "5m":objs.loadavgObj.loadavg5m,
+                    "15m":objs.loadavgObj.loadavg15m,
                 },
                 "cpu": {
                     cpuUsage:objscpuObj.cpuUsage.toFixed(1),
