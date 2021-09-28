@@ -1,3 +1,7 @@
 .env
 node_modules
+<<<<<<< HEAD
 log.json
+=======
+log.json
+>>>>>>> 51ef193e98735516469a4c6036f5282dff8b04f7
