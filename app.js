@@ -353,7 +353,7 @@ const diskObj = {
         try {
             const lines = content.split('\n');
             const values = lines.map(line=>line.replace(/\s+/g, ' ').trim().split(' '))
-            //values[index]: [3]:장치이름, 
+            //values[index]: [2]:장치이름, [5]: read 섹터 수, [9]: write 섹터 수 
 
             values.forEach(stats=> {
                 const deviceName = stats[2];
@@ -718,13 +718,14 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 promiseList.push(connectionList[0].query(query))
             })
             const countList = await Promise.all(promiseList);
-            //tuple이 300개가 넘어가면 가장 오래된 tuple부터 지움(300개 유지)
+            //tuple이 7*24*60*60/3개(1주일 치)가 넘어가면 가장 오래된 tuple부터 지움
+            const amountOfWeekTuple = 7*24*60*60/3;
             promiseList.splice(0);
             tableList.forEach((tableName,index)=>{
                 let [row,field] = countList[index][0];
-                if(row['cnt']>300) {
-                    const deleteLatest300Query = `DELETE FROM ${tableName} ORDER BY date limit ${cnt-300}`;
-                    promiseList.push(connectionList[0].query(deleteLatest300Query));
+                if(row['cnt']>amountOfWeekTuple) {
+                    const deleteLatestQuery = `DELETE FROM ${tableName} ORDER BY date limit ${cnt-amountOfWeekTuple}`;
+                    promiseList.push(connectionList[0].query(deleteLatestQuery));
                 }
             })
             await Promise.all(promiseList);
