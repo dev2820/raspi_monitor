@@ -161,10 +161,10 @@ const cpuObj = {
 
             //cpuUsage 계산 (100 - idle)
             this.cpuUsage = 100 - this.cpuId;
-            this.cpu0Usage = 100 - this.cpu0id;
-            this.cpu1Usage = 100 - this.cpu1id;
-            this.cpu2Usage = 100 - this.cpu2id;
-            this.cpu3Usage = 100 - this.cpu3id;
+            this.cpu0usage = 100 - this.cpu0id;
+            this.cpu1usage = 100 - this.cpu1id;
+            this.cpu2usage = 100 - this.cpu2id;
+            this.cpu3usage = 100 - this.cpu3id;
             
             this.beforeCpuUs = parseInt(parseCpu[0]); 
             this.beforeCpuNi = parseInt(parseCpu[1]); 
@@ -228,7 +228,7 @@ const cpuObj = {
 	cpuHi: 0,
 	cpuSi: 0,
 	cpuSt: 0,
-    cpu0Usage: 0,
+    cpu0usage: 0,
 	cpu0us: 0,
 	cpu0sy: 0,
 	cpu0ni: 0,
@@ -237,7 +237,7 @@ const cpuObj = {
 	cpu0hi: 0,
 	cpu0si: 0,
 	cpu0st: 0,
-    cpu1Usage: 0,
+    cpu1usage: 0,
 	cpu1us: 0,
 	cpu1sy: 0,
 	cpu1ni: 0,
@@ -246,7 +246,7 @@ const cpuObj = {
 	cpu1hi: 0,
 	cpu1si: 0,
 	cpu1st: 0,
-    cpu2Usage: 0,
+    cpu2usage: 0,
 	cpu2us: 0,
 	cpu2sy: 0,
 	cpu2ni: 0,
@@ -255,7 +255,7 @@ const cpuObj = {
 	cpu2hi: 0,
 	cpu2si: 0,
 	cpu2st: 0,
-    cpu3Usage: 0,
+    cpu3usage: 0,
 	cpu3us: 0,
 	cpu3sy: 0,
 	cpu3ni: 0,
