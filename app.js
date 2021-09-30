@@ -416,13 +416,19 @@ const netObj = {
                 switch(netName) {
                     case 'eth0:': {
                         const receiveBytes = parseInt(stats[1]);
+                        const receiveErrBytes = parseInt(stats[3]);
                         const transmitBytes = parseInt(stats[9]);
+                        const transmitErrBytes = parseInt(stats[11]);
                         
                         this.netReceive = (receiveBytes-this.beforeNetReceive)*8/INTERVAL/1024;
                         this.netTransmit = (transmitBytes-this.beforeNetTransmit)*8/INTERVAL/1024;
-                        
+                        this.netReceiveErr = (receiveErrBytes-this.beforeNetReceiveErr)*8/INTERVAL/1024;
+                        this.netTransmitErr = (transmitErrBytes-this.beforeNetTransmitErr)*8/INTERVAL/1024;
+
                         this.beforeNetReceive = receiveBytes;
                         this.beforeNetTransmit = transmitBytes;
+                        this.beforeNetReceiveErr = receiveErrBytes;
+                        this.beforeNetTransmitErr = transmitErrBytes;
                         break;
                     }
                 }
@@ -438,8 +444,12 @@ const netObj = {
     isInit: false,
     beforeNetReceive: 0,
     beforeNetTransmit: 0,
+    beforeNetReceiveErr: 0,
+    beforeNetTransmitErr: 0,
     netReceive: 0,
-	netTransmit: 0
+	netTransmit: 0,
+    netReceiveErr: 0,
+	netTransmitErr: 0
 }
 /* cpu_status table insert용 쿼리 */
 const cpuInsertQuery = `INSERT INTO cpu_status(
@@ -453,6 +463,7 @@ const cpuInsertQuery = `INSERT INTO cpu_status(
     cpu_hi,
     cpu_si,
     cpu_st,
+    cpu0_usage,
     cpu0_us,
     cpu0_sy,
     cpu0_ni,
@@ -461,6 +472,7 @@ const cpuInsertQuery = `INSERT INTO cpu_status(
     cpu0_hi,
     cpu0_si,
     cpu0_st,
+    cpu1_usage,
     cpu1_us,
     cpu1_sy,
     cpu1_ni,
@@ -469,6 +481,7 @@ const cpuInsertQuery = `INSERT INTO cpu_status(
     cpu1_hi,
     cpu1_si,
     cpu1_st,
+    cpu2_usage,
     cpu2_us,
     cpu2_sy,
     cpu2_ni,
@@ -477,6 +490,7 @@ const cpuInsertQuery = `INSERT INTO cpu_status(
     cpu2_hi,
     cpu2_si,
     cpu2_st,
+    cpu3_usage,
     cpu3_us,
     cpu3_sy,
     cpu3_ni,
@@ -490,7 +504,7 @@ const cpuInsertQuery = `INSERT INTO cpu_status(
     ?,?,?,?,?,?,?,?,?,?,
     ?,?,?,?,?,?,?,?,?,?,
     ?,?,?,?,?,?,?,?,?,?,
-    ?,?
+    ?,?,?,?,?,?
 )`;
 /* memory_status table insert용 쿼리 */
 const memInsertQuery = `INSERT INTO memory_status(
@@ -525,9 +539,11 @@ const ioInsertQuery = `INSERT INTO io_status(
 const networkInsertQuery = `INSERT INTO network_status(
     date,
     net_receive,
-    net_transmit
+    net_transmit,
+    net_receive_err,
+    net_transmit_err
 ) VALUES (
-    ?,?,?
+    ?,?,?,?,?
 )`;
 /* summary_status table insert용 쿼리 */
 const summaryInsertQuery = `INSERT INTO summary_status(
@@ -628,6 +644,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 objs.cpuObj.cpuHi.toFixed(1),
                 objs.cpuObj.cpuSi.toFixed(1),
                 objs.cpuObj.cpuSt.toFixed(1),
+                objs.cpuObj.cpu0usage.toFixed(1),
                 objs.cpuObj.cpu0us.toFixed(1),
                 objs.cpuObj.cpu0sy.toFixed(1),
                 objs.cpuObj.cpu0ni.toFixed(1),
@@ -636,6 +653,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 objs.cpuObj.cpu0hi.toFixed(1),
                 objs.cpuObj.cpu0si.toFixed(1),
                 objs.cpuObj.cpu0st.toFixed(1),
+                objs.cpuObj.cpu1usage.toFixed(1),
                 objs.cpuObj.cpu1us.toFixed(1),
                 objs.cpuObj.cpu1sy.toFixed(1),
                 objs.cpuObj.cpu1ni.toFixed(1),
@@ -644,6 +662,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 objs.cpuObj.cpu1hi.toFixed(1),
                 objs.cpuObj.cpu1si.toFixed(1),
                 objs.cpuObj.cpu1st.toFixed(1),
+                objs.cpuObj.cpu2usage.toFixed(1),
                 objs.cpuObj.cpu2us.toFixed(1),
                 objs.cpuObj.cpu2sy.toFixed(1),
                 objs.cpuObj.cpu2ni.toFixed(1),
@@ -652,6 +671,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 objs.cpuObj.cpu2hi.toFixed(1),
                 objs.cpuObj.cpu2si.toFixed(1),
                 objs.cpuObj.cpu2st.toFixed(1),
+                objs.cpuObj.cpu3usage.toFixed(1),
                 objs.cpuObj.cpu3us.toFixed(1),
                 objs.cpuObj.cpu3sy.toFixed(1),
                 objs.cpuObj.cpu3ni.toFixed(1),
@@ -690,6 +710,8 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 system_time,
                 objs.netObj.netReceive.toFixed(1),
                 objs.netObj.netTransmit.toFixed(1),
+                objs.netObj.netReceiveErr.toFixed(1),
+                objs.netObj.netTransmitErr.toFixed(1),
             ]));
             //summary_status insert
             promiseList.push(connectionList[4].query(summaryInsertQuery,[
