@@ -726,11 +726,11 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 objs.netObj.netTransmit.toFixed(1)
             ]));
             await Promise.all(promiseList)
-            commitList = connectionList.map(connection=>{
+            const commitList = connectionList.map(connection=>{
                 return connection.commit();
             })
             await Promise.all(commitList)
-            
+
             const tableList = ['cpu_status','memory_status','io_status','network_status','summary_status'];
             //각 table별 tuple 개수 새기
             promiseList.splice(0);
