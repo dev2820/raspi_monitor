@@ -751,10 +751,15 @@ const mainLoop = async (interval,objs,dbOptions) => {
             })
             await Promise.all(promiseList);
 
-            connectionList.forEach(connection=>{
+            const deleteOldTupleCommitList = connectionList.map(connection=>{
                 connection.commit();
+            });
+            await Promise.all(deleteOldTupleCommitList);
+            
+            connectionList.forEach(connection=>{
                 connection.release();
             })
+
         },interval*1000);
     }
     catch(err) {
