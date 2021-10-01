@@ -318,7 +318,6 @@ const memObj = {
             
             this.buffMemory = parseInt(lines[3].match(regInt)[0]);
             this.cacheMemory = parseInt(lines[4].match(regInt)[0]);
-            // this.SReclaimable = parseInt(lines[23].match(regInt)[0]);
             this.usedMemory = this.totalMemory - (this.freeMemory + this.buffMemory + this.cacheMemory);
             this.availableMemory = parseInt(lines[2].match(regInt)[0]);
             this.totalSwap = parseInt(lines[14].match(regInt)[0]);
@@ -340,7 +339,6 @@ const memObj = {
 	usedMemory:0,
 	buffMemory:0,
 	cacheMemory:0,
-    SReclaimable:0,
 	availableMemory:0,
 	totalSwap:0,
 	freeSwap:0,
