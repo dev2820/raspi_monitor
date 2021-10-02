@@ -138,7 +138,6 @@
 
 <pre>
 <code>
-```sql
 CREATE TABLE cpu_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
 	cpu_usage FLOAT UNSIGNED NULL,
@@ -187,7 +186,6 @@ CREATE TABLE cpu_status (
 	cpu3_si FLOAT UNSIGNED NULL,
 	cpu3_st FLOAT UNSIGNED NULL
 );
-```
 </code>
 </pre>
 </details>
@@ -197,7 +195,6 @@ CREATE TABLE cpu_status (
 반드시 memory_status 라는 이름으로 테이블을 생성해야합니다. 
 <pre>
 <code>
-```sql
 CREATE TABLE memory_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
 	mem_usage FLOAT UNSIGNED NULL,
@@ -211,7 +208,6 @@ CREATE TABLE memory_status (
 	free_swap MEDIUMINT UNSIGNED NULL,
 	used_swap MEDIUMINT UNSIGNED NULL
 );
-```
 </code>
 </pre>
 </details>
@@ -221,7 +217,6 @@ CREATE TABLE memory_status (
 반드시 io_status 라는 이름으로 테이블을 생성해야합니다. 
 <pre>
 <code>
-```sql
 CREATE TABLE io_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
 	disk_total_read FLOAT UNSIGNED NULL,
@@ -231,7 +226,6 @@ CREATE TABLE io_status (
 	sda_read FLOAT UNSIGNED NULL,
 	sda_write FLOAT UNSIGNED NULL
 );
-```
 </code>
 </pre>
 </details>
@@ -242,7 +236,6 @@ CREATE TABLE io_status (
 
 <pre>
 <code>
-```sql
 CREATE TABLE network_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
 	net_receive FLOAT UNSIGNED NULL,
@@ -250,7 +243,6 @@ CREATE TABLE network_status (
     net_receive_err FLOAT UNSIGNED NULL,
 	net_transmit_err FLOAT UNSIGNED NULL
 );
-```
 </code>
 </pre>
 </details>
@@ -261,8 +253,6 @@ CREATE TABLE network_status (
 
 <pre>
 <code>
-```sql
-
 CREATE TABLE summary_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
 	uptime FLOAT UNSIGNED NULL,
@@ -276,7 +266,6 @@ CREATE TABLE summary_status (
 	net_receive FLOAT UNSIGNED NULL,
 	net_transmit FLOAT UNSIGNED NULL
 );
-```
 </code>
 </pre>
 </details>
