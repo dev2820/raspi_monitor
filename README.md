@@ -135,6 +135,9 @@
 <details>
   <summary>cpu 테이블 생성 쿼리</summary>
 반드시 cpu_status 라는 이름으로 테이블을 생성해야합니다. 
+
+<pre>
+<code>
 ```sql
 CREATE TABLE cpu_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
@@ -185,12 +188,15 @@ CREATE TABLE cpu_status (
 	cpu3_st FLOAT UNSIGNED NULL
 );
 ```
+</code>
+</pre>
 </details>
 
 <details>
   <summary>memory 테이블 생성 쿼리</summary>
 반드시 memory_status 라는 이름으로 테이블을 생성해야합니다. 
-
+<pre>
+<code>
 ```sql
 CREATE TABLE memory_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
@@ -206,12 +212,15 @@ CREATE TABLE memory_status (
 	used_swap MEDIUMINT UNSIGNED NULL
 );
 ```
+</code>
+</pre>
 </details>
 
 <details>
   <summary>io 테이블 생성 쿼리</summary>
 반드시 io_status 라는 이름으로 테이블을 생성해야합니다. 
-
+<pre>
+<code>
 ```sql
 CREATE TABLE io_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
@@ -223,12 +232,16 @@ CREATE TABLE io_status (
 	sda_write FLOAT UNSIGNED NULL
 );
 ```
+</code>
+</pre>
 </details>
 
 <details>
   <summary>network 테이블 생성 쿼리</summary>
 반드시 cpu_status 라는 이름으로 테이블을 생성해야합니다. 
 
+<pre>
+<code>
 ```sql
 CREATE TABLE network_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
@@ -238,12 +251,16 @@ CREATE TABLE network_status (
 	net_transmit_err FLOAT UNSIGNED NULL
 );
 ```
+</code>
+</pre>
 </details>
 
 <details>
   <summary>summary 테이블 생성 쿼리</summary>
 반드시 summary_status 라는 이름으로 테이블을 생성해야합니다. 
 
+<pre>
+<code>
 ```sql
 
 CREATE TABLE summary_status (
@@ -260,6 +277,8 @@ CREATE TABLE summary_status (
 	net_transmit FLOAT UNSIGNED NULL
 );
 ```
+</code>
+</pre>
 </details>
 
 
