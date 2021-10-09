@@ -49,7 +49,7 @@ const uptimeObj = {
         try {
             const reg = /[0-9]*[.]?[0-9]+/g
             const parseResult = content.match(reg); // [0]:uptime, [1]:idle time
-            this.uptime = parseFloat(parseResult[0]);
+            this.uptime = parseInt(parseResult[0]);
             this.isInit = true;
         }
         catch(err) {
@@ -752,7 +752,6 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 objs.netObj.netReceive.toFixed(1),
                 objs.netObj.netTransmit.toFixed(1)
             ]));
-            console.log(objs.uptimeObj.uptime);
             await Promise.all(promiseList)
             const commitList = connectionList.map(connection=>{
                 return connection.commit();
@@ -768,7 +767,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
             })
             const countList = await Promise.all(promiseList);
             //tuple이 7*24*60*60/3개(1주일 치)가 넘어가면 가장 오래된 tuple부터 지움
-            const amountOfWeekTuple = 15*60/3;
+            const amountOfWeekTuple = 7*24*60*60/3;
             promiseList.splice(0);
             tableList.forEach((tableName,index)=>{
                 let [row,field] = countList[index][0];
