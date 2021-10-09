@@ -104,7 +104,7 @@
 |속성 이름|type|not null|default값|설명|
 |:---:|:---:|:---:|:---:|:---:|
 |date|timestamp|O|now()|데이터를 기록한 시각, **기본키**|
-|uptime|unsigned float|X||부팅 후 지난 시간|
+|uptime|unsigned int|X||부팅 후 지난 시간|
 |cpu_thermal|unsigned float|X||cpu 온도|
 |loadavg_1m|unsigned float|X||1분 평균 loadavg|
 |loadavg_5m|unsigned float|X||5분 평균 loadavg|
@@ -256,7 +256,7 @@ CREATE TABLE network_status (
 <code>
 CREATE TABLE summary_status (
 	date TIMESTAMP NOT NULL DEFAULT NOW() PRIMARY KEY,
-	uptime FLOAT UNSIGNED NULL,
+	uptime INT UNSIGNED NULL,
     cpu_thermal FLOAT UNSIGNED NULL,
 	loadavg_1m FLOAT UNSIGNED NULL,
 	loadavg_5m FLOAT UNSIGNED NULL,
