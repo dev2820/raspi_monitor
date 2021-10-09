@@ -65,7 +65,7 @@ const uptimeObj = {
 const cpuThermalObj = {
     init(content) {
         try {
-            this.thermal = parseFloat(content)/100.0;
+            this.thermal = parseFloat(content)/1000.0;
         }
         catch(err) {
             console.log(err)
