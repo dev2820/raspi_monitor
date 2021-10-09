@@ -752,6 +752,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
                 objs.netObj.netReceive.toFixed(1),
                 objs.netObj.netTransmit.toFixed(1)
             ]));
+            console.log(objs.uptimeObj.uptime);
             await Promise.all(promiseList)
             const commitList = connectionList.map(connection=>{
                 return connection.commit();
