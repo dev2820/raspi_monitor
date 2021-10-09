@@ -767,7 +767,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
             })
             const countList = await Promise.all(promiseList);
             //tuple이 7*24*60*60/3개(1주일 치)가 넘어가면 가장 오래된 tuple부터 지움
-            const amountOfWeekTuple = 7*24*60*60/3;
+            const amountOfWeekTuple = 15*60/3;
             promiseList.splice(0);
             tableList.forEach((tableName,index)=>{
                 let [row,field] = countList[index][0];
