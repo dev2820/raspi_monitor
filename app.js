@@ -18,12 +18,13 @@ asyncProcFilesRead
 */
 const asyncProcFilesRead = async () => {
     const filePathList = [
-        "/proc/uptime",      // uptime 정보
-        "/proc/loadavg",     // loadavg 1분 5분 15분 정보
-        "/proc/stat",        // cpu 사용률 정보
-        "/proc/meminfo",     // 메모리 정보
-        "/proc/diskstats",   // 디스크 정보
-        "/proc/net/dev"      // 네트워크 정보
+        "/proc/uptime",                            // uptime 정보
+        "/sys/class/hwmon/hwmon0/temp1_input",      // cpu 온도 정보
+        "/proc/loadavg",                           // loadavg 1분 5분 15분 정보
+        "/proc/stat",                              // cpu 사용률 정보
+        "/proc/meminfo",                           // 메모리 정보
+        "/proc/diskstats",                         // 디스크 정보
+        "/proc/net/dev"                            // 네트워크 정보
     ];
     
     const filePromiseList = filePathList.map(path=>{
@@ -33,11 +34,12 @@ const asyncProcFilesRead = async () => {
     const fileContentList = await Promise.all(filePromiseList)
     return {
         uptime: fileContentList[0],
-        loadavg: fileContentList[1],
-        cpu: fileContentList[2],
-        mem: fileContentList[3],
-        disk: fileContentList[4],
-        net: fileContentList[5],
+        cpuThermal: fileContentList[1],
+        loadavg: fileContentList[2],
+        cpu: fileContentList[3],
+        mem: fileContentList[4],
+        disk: fileContentList[5],
+        net: fileContentList[6],
     }
 }
 
@@ -55,8 +57,23 @@ const uptimeObj = {
             this.isInit = false;
         }
     },
-    isInit: false, // 여기에 파일내용을 처리하는 함수를 작성합시다.
+    isInit: false,
     uptime: 0 // 처리한 값이 들어갑니다.
+}
+
+/*cpu_thermal 관리 객체 */
+const cpuThermalObj = {
+    init(content) {
+        try {
+            this.thermal = parseFloat(content)/100.0;
+        }
+        catch(err) {
+            console.log(err)
+            this.isInit = false;
+        }
+    },
+    isInit: false,
+    thermal: 0 // 처리한 값이 들어갑니다.
 }
 
 /*loadavg 관리 객체 */
@@ -449,6 +466,13 @@ const netObj = {
     netReceiveErr: 0,
 	netTransmitErr: 0
 }
+
+const tempObj = {
+    init(content) {
+        const temp = parseInt(content)/100.0;
+    },
+    temp: 0
+}
 /* cpu_status table insert용 쿼리 */
 const cpuInsertQuery = `INSERT INTO cpu_status(
     date,
@@ -547,6 +571,7 @@ const networkInsertQuery = `INSERT INTO network_status(
 const summaryInsertQuery = `INSERT INTO summary_status(
     date,
     uptime,
+    cpu_thermal,
     loadavg_1m,
     loadavg_5m,
     loadavg_15m,
@@ -558,7 +583,7 @@ const summaryInsertQuery = `INSERT INTO summary_status(
     net_transmit
 ) VALUES (
     ?,?,?,?,?,?,?,?,?,?,
-    ?
+    ?,?
 )`;
 /*
 getValuesFromFileToObjs
@@ -575,6 +600,7 @@ const getValuesFromFileToObjs = async (objs) => {
 
         //파일 내용 저장
         objs.uptimeObj.init(fileContentObj.uptime);
+        objs.cpuThermalObj.init(fileContentObj.cpuThermal);
         objs.loadavgObj.init(fileContentObj.loadavg);
         objs.cpuObj.init(fileContentObj.cpu);
         objs.memObj.init(fileContentObj.mem);
@@ -715,6 +741,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
             promiseList.push(connectionList[4].query(summaryInsertQuery,[
                 system_time,
                 objs.uptimeObj.uptime,
+                objs.cpuThermalObj.thermal,
                 objs.loadavgObj.loadavg1m,
                 objs.loadavgObj.loadavg5m,
                 objs.loadavgObj.loadavg15m,
@@ -744,7 +771,8 @@ const mainLoop = async (interval,objs,dbOptions) => {
             promiseList.splice(0);
             tableList.forEach((tableName,index)=>{
                 let [row,field] = countList[index][0];
-                if(row['cnt']>amountOfWeekTuple) {
+                const cnt = row['cnt'];
+                if(cnt>amountOfWeekTuple) {
                     const deleteLatestQuery = `DELETE FROM ${tableName} ORDER BY date limit ${cnt-amountOfWeekTuple}`;
                     promiseList.push(connectionList[0].query(deleteLatestQuery));
                 }
@@ -769,6 +797,7 @@ const mainLoop = async (interval,objs,dbOptions) => {
 }
 const objs = {
     uptimeObj,
+    cpuThermalObj,
     loadavgObj,
     cpuObj,
     memObj,
